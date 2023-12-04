@@ -1,3 +1,5 @@
+import Crypto from 'node:crypto';
+
 export type SDJWTCompact = string;
 
 export type SDJWTConfig = {
@@ -10,6 +12,6 @@ export type SDJWTConfig = {
 
 export type OrPromise<T> = T | Promise<T>;
 
-export type Signer<
-  Header extends Record<string, unknown> = Record<string, unknown>
-> = (input: string, header: Header) => OrPromise<Uint8Array>;
+export type Signer = (data: string) => OrPromise<Uint8Array>;
+export type Verifier = (data: string, sig: Uint8Array) => OrPromise<boolean>;
+export type Hasher = (data: string) => string;
