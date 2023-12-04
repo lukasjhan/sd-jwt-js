@@ -2,22 +2,6 @@ import { Base64Url } from './base64url';
 import { SDJWTException } from './error';
 import { Signer, Verifier } from './type';
 
-export function decodeJWT<
-  Header extends Record<string, unknown> = Record<string, unknown>,
-  Payload extends Record<string, unknown> = Record<string, unknown>,
->(input: string): { header: Header; payload: Payload; signature: Uint8Array } {
-  const { 0: header, 1: payload, 2: signature, length } = input.split('.');
-  if (length !== 3) {
-    throw new SDJWTException('Invalid JWT as input');
-  }
-
-  return {
-    header: JSON.parse(Base64Url.decode(header)),
-    payload: JSON.parse(Base64Url.decode(payload)),
-    signature: Uint8Array.from(Buffer.from(signature, 'base64url')),
-  };
-}
-
 export type JwtData<
   Header extends Record<string, any>,
   Payload extends Record<string, any>,
@@ -49,11 +33,29 @@ export class Jwt<
     this.signer = options?.signer;
   }
 
-  public static fromCompact<
+  public static decodeJWT<
     Header extends Record<string, any> = Record<string, any>,
     Payload extends Record<string, any> = Record<string, any>,
-  >(compact: string): Jwt<Header, Payload> {
-    const { header, payload, signature } = decodeJWT<Header, Payload>(compact);
+  >(jwt: string): { header: Header; payload: Payload; signature: Uint8Array } {
+    const { 0: header, 1: payload, 2: signature, length } = jwt.split('.');
+    if (length !== 3) {
+      throw new SDJWTException('Invalid JWT as input');
+    }
+
+    return {
+      header: JSON.parse(Base64Url.decode(header)),
+      payload: JSON.parse(Base64Url.decode(payload)),
+      signature: Uint8Array.from(Buffer.from(signature, 'base64url')),
+    };
+  }
+
+  public static fromEncode<
+    Header extends Record<string, any> = Record<string, any>,
+    Payload extends Record<string, any> = Record<string, any>,
+  >(encodedJwt: string): Jwt<Header, Payload> {
+    const { header, payload, signature } = Jwt.decodeJWT<Header, Payload>(
+      encodedJwt,
+    );
 
     const jwt = new Jwt<Header, Payload>({
       header,
@@ -97,7 +99,7 @@ export class Jwt<
     return this.signature;
   }
 
-  public serialize(): string {
+  public encodeJwt(): string {
     if (!this.header || !this.payload || !this.signature) {
       throw new SDJWTException('Serialize Error: Invalid JWT');
     }

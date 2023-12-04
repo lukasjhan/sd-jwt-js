@@ -72,6 +72,15 @@ export class DefaultSigner {
       .toString('base64');
   }
 
+  public getPrivateKey(): string {
+    return this.privKey
+      .export({
+        type: 'pkcs8',
+        format: 'pem',
+      })
+      .toString('base64');
+  }
+
   public getSigner(): Signer {
     return this.sign.bind(this);
   }
