@@ -1,4 +1,5 @@
 import { SD_SEPARATOR } from './constant';
+import { Disclosure } from './disclosure';
 import { Jwt } from './jwt';
 import { KBJwt, kbHeader, kbPayload } from './kbjwt';
 
