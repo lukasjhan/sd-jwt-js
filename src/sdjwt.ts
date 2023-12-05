@@ -110,4 +110,6 @@ export class SDJwt<
     data.push(this.kbJwt ? this.kbJwt.encodeJwt() : '');
     return data.join(SD_SEPARATOR);
   }
+
+  public find(key: string): boolean {}
 }

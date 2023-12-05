@@ -30,3 +30,5 @@ export type DisclosureFrame = {
   [key: string | number]: DisclosureFrame | unknown;
   _sd?: Array<string | number>;
 };
+
+export type PresentationFrame = DisclosureFrame;

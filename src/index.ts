@@ -1,6 +1,6 @@
 import { generateSalt, hash } from './crypto';
 import { SDJwt } from './sdjwt';
-import { DisclosureFrame, SDJWTConfig } from './type';
+import { DisclosureFrame, PresentationFrame, SDJWTConfig } from './type';
 
 export const defaultConfig: Required<SDJWTConfig> = {
   omitDecoy: false,
@@ -26,19 +26,21 @@ export class SDJwtInstance {
     payload: Payload,
     disclosureFrame?: DisclosureFrame,
     options?: any,
-  ): Promise<SDJwt<Header, Payload>> {}
+  ): Promise<string> {}
 
   public async present(
     encodedSDJwt: string,
-    presentationFrame?: any,
+    presentationFrame?: PresentationFrame,
     options?: any,
   ): Promise<string> {}
 
   public async verify(
     encodedSDJwt: string,
-    claims?: any,
+    requiredClaimKeys?: string[],
     options?: any,
   ): Promise<boolean> {}
+
+  public async validate(encodedSDJwt: string): Promise<boolean> {}
 
   public config(newConfig: SDJWTConfig) {
     this.userConfig = { ...this.userConfig, ...newConfig };
