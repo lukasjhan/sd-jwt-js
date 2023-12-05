@@ -26,4 +26,21 @@ export class KBJwt<
     }
     return await super.verify();
   }
+
+  public static fromKBEncode<
+    Header extends kbHeader = kbHeader,
+    Payload extends kbPayload = kbPayload,
+  >(encodedJwt: string): KBJwt<Header, Payload> {
+    const { header, payload, signature } = Jwt.decodeJWT<Header, Payload>(
+      encodedJwt,
+    );
+
+    const jwt = new KBJwt<Header, Payload>({
+      header,
+      payload,
+      signature,
+    });
+
+    return jwt;
+  }
 }

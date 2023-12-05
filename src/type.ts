@@ -25,3 +25,8 @@ export type Signer = (data: string) => OrPromise<Uint8Array>;
 export type Verifier = (data: string, sig: Uint8Array) => OrPromise<boolean>;
 export type Hasher = (data: string) => string;
 export type SaltGenerator = (length: number) => string;
+
+export type DisclosureFrame = {
+  [key: string | number]: DisclosureFrame | unknown;
+  _sd?: Array<string | number>;
+};

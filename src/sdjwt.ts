@@ -1,7 +1,19 @@
 import { SD_SEPARATOR } from './constant';
 import { Disclosure } from './disclosure';
+import { SDJWTException } from './error';
 import { Jwt } from './jwt';
 import { KBJwt, kbHeader, kbPayload } from './kbjwt';
+
+export type SDJwtData<
+  Header extends Record<string, any>,
+  Payload extends Record<string, any>,
+  KBHeader extends kbHeader = kbHeader,
+  KBPayload extends kbPayload = kbPayload,
+> = {
+  jwt?: Jwt<Header, Payload>;
+  disclosures?: Array<Disclosure<any>>;
+  kbJwt?: KBJwt<KBHeader, KBPayload>;
+};
 
 export class SDJwt<
   Header extends Record<string, any> = Record<string, any>,
@@ -11,7 +23,13 @@ export class SDJwt<
 > {
   public jwt?: Jwt<Header, Payload>;
   public disclosures?: Array<Disclosure<any>>;
-  public keyBinding?: KBJwt<KBHeader, KBPayload>;
+  public kbJwt?: KBJwt<KBHeader, KBPayload>;
+
+  constructor(data?: SDJwtData<Header, Payload, KBHeader, KBPayload>) {
+    this.jwt = data?.jwt;
+    this.disclosures = data?.disclosures;
+    this.kbJwt = data?.kbJwt;
+  }
 
   public static decodeSDJwt<
     Header extends Record<string, any> = Record<string, any>,
@@ -22,8 +40,8 @@ export class SDJwt<
     sdjwt: string,
   ): {
     jwt: Jwt<Header, Payload>;
-    disclosures: any;
-    kbJwt?: KBJwt;
+    disclosures: Array<Disclosure<any>>;
+    kbJwt?: KBJwt<KBHeader, KBPayload>;
   } {
     const [encodedJwt, ...encodedDisclosures] = sdjwt.split(SD_SEPARATOR);
     const jwt = Jwt.fromEncode<Header, Payload>(encodedJwt);
@@ -37,7 +55,7 @@ export class SDJwt<
 
     const encodedKeyBindingJwt = encodedDisclosures.pop();
     const kbJwt = encodedKeyBindingJwt
-      ? KBJwt.fromEncode<KBHeader, KBPayload>(encodedKeyBindingJwt)
+      ? KBJwt.fromKBEncode<KBHeader, KBPayload>(encodedKeyBindingJwt)
       : undefined;
     const disclosures = encodedDisclosures.map(Disclosure.fromEncode);
 
@@ -61,18 +79,35 @@ export class SDJwt<
       KBPayload
     >(encodedSdJwt);
 
-    return new SDJwt<Header, Payload, KBHeader, KBPayload>(
+    return new SDJwt<Header, Payload, KBHeader, KBPayload>({
       jwt,
       disclosures,
       kbJwt,
-    );
+    });
   }
-
-  public issue() {}
 
   public present() {}
 
   public verify() {}
 
-  public encodeSDJwt() {}
+  public encodeSDJwt() {
+    const data: string[] = [];
+
+    if (!this.jwt) {
+      throw new SDJWTException('Invalid sd-jwt: jwt is missing');
+    }
+
+    const encodedJwt = this.jwt.encodeJwt();
+    data.push(encodedJwt);
+
+    if (this.disclosures && this.disclosures.length > 0) {
+      const encodeddisclosures = this.disclosures
+        .map((dc) => data.push(dc.encode()))
+        .join(SD_SEPARATOR);
+      data.push(encodeddisclosures);
+    }
+
+    data.push(this.kbJwt ? this.kbJwt.encodeJwt() : '');
+    return data.join(SD_SEPARATOR);
+  }
 }

@@ -10,7 +10,8 @@ import SdJwt, { SDJwtInstance } from './index';
     _sd: ['first_name', 'last_name'],
   };
 
-  const sdjwt = await SdJwt.issue(payload, diclosureFrame);
+  const credential: string = await SdJwt.issue(payload, diclosureFrame);
+  const sdjwt = SdJwt.decode(credential);
   /*
 {
   header: {
@@ -41,9 +42,28 @@ import SdJwt, { SDJwtInstance } from './index';
   ]
 }
   */
-  const credential = SdJwt.encode(sdjwt);
 
   /////////////////////////////////////////////////////////////
+
+  // validate jwt
+  const validateResult = await SdJwt.validate(credential);
+  // jwt validation => sd-jwt validation
+
+  // keys (*) wip
+  // Object.keys <=> 최대한 유사하게 1차 string[]
+  // 모든 키를 한번에 반환
+
+  const data = {
+    name: 'lukas',
+    address: {
+      nation: 'kr',
+      city: 'seoul',
+    },
+  };
+
+  // ****
+  // jwt.find(['city']) => true,
+  // [jwt].map(find...) => [true, false, true]
 
   const presentationFrame = {
     _sd: ['last_name'],
