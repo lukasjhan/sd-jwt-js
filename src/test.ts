@@ -1,34 +1,70 @@
-import { Jwt } from './jwt';
-import { DefaultSigner } from './crypto';
-import { SDJwt } from './sdjwt';
-
-const jwt = new Jwt();
-const signer = new DefaultSigner();
-console.log('pubkey:', signer.getPublicKey());
-
-jwt
-  .setHeader({
-    alg: 'EdDSA',
-    typ: 'JWT',
-  })
-  .setPayload({
-    iss: 'https://example.com',
-    iat: 1300019380,
-  })
-  .setSigner(signer.getSigner());
+import SdJwt, { SDJwtInstance } from './index';
 
 (async () => {
-  await jwt.sign();
-  const str = jwt.encodeJwt();
-  console.log(str);
-  const jwt2 = Jwt.fromEncode(str);
-  console.log(jwt2);
-  jwt2.setVerifier(signer.getVerifier());
-  const ret = await jwt2.verify();
-  console.log(ret);
+  const payload = {
+    first_name: 'lukas',
+    last_name: 'Han',
+  };
+
+  const diclosureFrame = {
+    _sd: ['first_name', 'last_name'],
+  };
+
+  const sdjwt = await SdJwt.issue(payload, diclosureFrame);
+  /*
+{
+  header: {
+    alg: 'EdDSA',
+    typ: 'sd-jwt
+  },
+  payload: {
+    _sd: [
+      'C9inp6YoRaEXR427zYJP7Qrk1WH_8bdwOA_YUrUnGQU',
+      'Kuet1yAa0HIQvYnOVd59hcViO9Ug6J2kSfqYRBeowvE',
+    ],
+    "_sd_alg": "sha-256"
+  }
+  signature: <Buffer 23 43 ...>,
+  disclosures: [
+    Disclosure {
+      salt: '2s0ecJLoIRYsI6fiLh2Rmw',
+      key: 'first_name',
+      value: 'lukas',
+      _digest: '2nSYrhcosKKF3afJm59vJScSda5PR67vegfMMfFwcgU'
+    },
+    Disclosure {
+      salt: 'GStG846slDv3qbEXTN2DuA',
+      key: 'last_name',
+      value: 'Han',
+      _digest: 'LNjub6UQwsiKkeHXJ9Izev59POudSvBMSBYRQaoBOGg'
+    },
+  ]
+}
+  */
+  const credential = SdJwt.encode(sdjwt);
+
+  /////////////////////////////////////////////////////////////
+
+  const presentationFrame = {
+    _sd: ['last_name'],
+  };
+  const encodedPresentSdjwt = await SdJwt.present(
+    credential,
+    presentationFrame,
+  );
+  /*
+eyJhbGciOiJFZERTQSJ9.eyJpZCI6ImRpZDpleGFtcGxlOmIzNGNhNmNkMzdiYmYyMyIsInR5cGUiOlsiUGVybWFuZW50UmVzaWRlbnQiLCJQZXJzb24iXSwiZ2l2ZW5OYW1lIjoiSk9ITiIsIm9iIjp7ImIiOnsiYyI6IjIiLCJkIjp7Il9zZCI6WyJrSlEwcjBjMjV5blM2cjJYYnJWOERFSm9ZVkRETHNwM1plY1duVjVlZTQ4Il19fSwiX3NkIjpbImh5eUxZWjhEa19rZXJNVzhOVWZnTmRxbEdxVkg5MTI1b0ZPTnhnVkZCa3MiXX0sIl9zZF9hbGciOiJzaGEtMjU2IiwiX3NkIjpbIjF3TUlhZnM5WDBGZW1uelRuWHBER0IyZmN3WUdiZXVSU3Z2VzhlZzhhTVUiLCIyblNZcmhjb3NLS0YzYWZKbTU5dkpTY1NkYTVQUjY3dmVnZk1NZkZ3Y2dVIiwiRmlxUlg1V18zQnpUYU1lMXVmZUR5aDBSa3J5TmVzODEtdXZpR2t6OXdJZyIsIkxOanViNlVRd3NpS2tlSFhKOUl6ZXY1OVBPdWRTdkJNU0JZUlFhb0JPR2ciLCJOcjBiMTJqcjVvdXItVlVMdTBXSGZKVVVCazBmbEppMWZ3Wms2ZE14bFE0IiwiUVpTOUZwZjJ2eFN5alU5WnNsWGNTQU5kVW42MEs3bWVEb2JPQWRlRUtJNCIsIlNQWUg2ZTB5YWhoc05fSUhzVmNGQXR4WUJOSmFpVlpfRDBoRXluUWd3cmMiLCJ2blAyX3RFQ01MU0pQNzZ3ZHlicTgxdE1JWFNkclZnU3lHVzdVNkJ6emQwIiwid0J1UjliVXd2Vl9tRXh1QzVvOWg2Y1dGVkVPLWV1ajV3WFJybDdmU3ZiYyJdfQ.I44GNgMgFFQNYS-XbwWhTvxajndisKgsu9H2xdGPID8gnOBqvA1SLJ9Kkg44eS2RUz-O5bltWdNBsQc2TwGiCg~WyIyczBlY0pMb0lSWXNJNmZpTGgyUm13IiwiaW1hZ2UiLCJkYXRhOmltYWdlL3BuZztiYXNlNjQsaVZCT1J3MEtHZ29rSmdnZz09Il0~WyJHU3RHODQ2c2xEdjNxYkVYVE4yRHVBIiwiZ2VuZGVyIiwiTWFsZSJd~WyJYZUZmTGxzdEpuMklfc3ctS21QRkJ3IiwiYmlydGhDb3VudHJ5IiwiQmFoYW1hcyJd~
+  */
+
+  const result = await SdJwt.verify(encodedPresentSdjwt, { last_name: true });
+  console.log(result);
+  // true
+  // need to what cause failure? @Ace
+
+  ///////////////////////////////////////////////////////////////////////////////////
+
+  const mySDJwtInstance: SDJwtInstance = SdJwt.create({ omitTyp: true });
+  mySDJwtInstance.config({ omitDecoy: true });
+
+  // ... using mySDJwtInstance to issue, present, verify SDJwt
 })();
-
-const sdjwt = `eyJhbGciOiAiRVMyNTYifQ.eyJfc2QiOiBbIkM5aW5wNllvUmFFWFI0Mjd6WUpQN1FyazFXSF84YmR3T0FfWVVyVW5HUVUiLCAiS3VldDF5QWEwSElRdlluT1ZkNTloY1ZpTzlVZzZKMmtTZnFZUkJlb3d2RSIsICJNTWxkT0ZGekIyZDB1bWxtcFRJYUdlcmhXZFVfUHBZZkx2S2hoX2ZfOWFZIiwgIlg2WkFZT0lJMnZQTjQwVjd4RXhad1Z3ejd5Um1MTmNWd3Q1REw4Ukx2NGciLCAiWTM0em1JbzBRTExPdGRNcFhHd2pCZ0x2cjE3eUVoaFlUMEZHb2ZSLWFJRSIsICJmeUdwMFdUd3dQdjJKRFFsbjFsU2lhZW9iWnNNV0ExMGJRNTk4OS05RFRzIiwgIm9tbUZBaWNWVDhMR0hDQjB1eXd4N2ZZdW8zTUhZS08xNWN6LVJaRVlNNVEiLCAiczBCS1lzTFd4UVFlVTh0VmxsdE03TUtzSVJUckVJYTFQa0ptcXhCQmY1VSJdLCAiaXNzIjogImh0dHBzOi8vaXNzdWVyLmV4YW1wbGUuY29tIiwgImlhdCI6IDE2ODMwMDAwMDAsICJleHAiOiAxODgzMDAwMDAwLCAiYWRkcmVzcyI6IHsiX3NkIjogWyI2YVVoelloWjdTSjFrVm1hZ1FBTzN1MkVUTjJDQzFhSGhlWnBLbmFGMF9FIiwgIkF6TGxGb2JrSjJ4aWF1cFJFUHlvSnotOS1OU2xkQjZDZ2pyN2ZVeW9IemciLCAiUHp6Y1Z1MHFiTXVCR1NqdWxmZXd6a2VzRDl6dXRPRXhuNUVXTndrclEtayIsICJiMkRrdzBqY0lGOXJHZzhfUEY4WmN2bmNXN3p3Wmo1cnlCV3ZYZnJwemVrIiwgImNQWUpISVo4VnUtZjlDQ3lWdWIyVWZnRWs4anZ2WGV6d0sxcF9KbmVlWFEiLCAiZ2xUM2hyU1U3ZlNXZ3dGNVVEWm1Xd0JUdzMyZ25VbGRJaGk4aEdWQ2FWNCIsICJydkpkNmlxNlQ1ZWptc0JNb0d3dU5YaDlxQUFGQVRBY2k0MG9pZEVlVnNBIiwgInVOSG9XWWhYc1poVkpDTkUyRHF5LXpxdDd0NjlnSkt5NVFhRnY3R3JNWDQiXX0sICJfc2RfYWxnIjogInNoYS0yNTYifQ.IjE4EfnYu1RZ1uz6yqtFh5Lppq36VC4VeSr-hLDFpZ9zqBNmMrT5JHLLXTuMJqKQp3NIzDsLaft4GK5bYyfqhg~WyJHMDJOU3JRZmpGWFE3SW8wOXN5YWpBIiwgInJlZ2lvbiIsICJcdTZlMmZcdTUzM2EiXQ~WyJsa2x4RjVqTVlsR1RQVW92TU5JdkNBIiwgImNvdW50cnkiLCAiSlAiXQ~`;
-
-const c = SDJwt.decodeSDJwt(sdjwt);
-console.log(c);
