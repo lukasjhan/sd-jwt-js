@@ -111,5 +111,5 @@ export class SDJwt<
     return data.join(SD_SEPARATOR);
   }
 
-  public find(key: string): boolean {}
+  public find(key: string) {}
 }

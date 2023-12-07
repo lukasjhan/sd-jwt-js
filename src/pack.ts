@@ -1,11 +1,19 @@
+import { SD_DIGEST, SD_LIST_KEY } from './constant';
+import { hash } from './crypto';
+import { Disclosure } from './disclosure';
+import { SDJwt } from './sdjwt';
+import { Hasher } from './type';
+
+export type SDMap = Record<string, Disclosure<any>>;
+
 export const createHashMapping = (
-  disclosures: Disclosure[],
-  hasher: Hasher,
-): SdDigestHashmap => {
-  const map = {};
-  disclosures.forEach((d) => {
-    const digest = hasher(d.disclosure);
-    map[digest] = d;
+  disclosures: Array<Disclosure<any>>,
+  hasher: Hasher = hash,
+): SDMap => {
+  const map: SDMap = {};
+  disclosures.forEach((disclosure) => {
+    const digest = disclosure.digest(hasher);
+    map[digest] = disclosure;
   });
   return map;
 };
@@ -15,20 +23,20 @@ export const createHashMapping = (
  * inserts claim if disclosed
  * removes any undisclosed claims
  */
-export const unpackArray = ({ arr, map }) => {
+export const unpackArray = (arr: Array<any>, map: SDMap) => {
   const unpackedArray: any[] = [];
   arr.forEach((item) => {
     if (item instanceof Object) {
-      // if Array item is { '...': <SD_HASH_DIGEST> }
-      if (item[SD_LIST_PREFIX]) {
-        const hash = item[SD_LIST_PREFIX];
+      // item is { '...': <DIGEST> }
+      if (item[SD_LIST_KEY]) {
+        const hash = item[SD_LIST_KEY];
         const disclosed = map[hash];
         if (disclosed) {
-          unpackedArray.push(unpack({ obj: disclosed.value, map }));
+          unpackedArray.push(unpack(disclosed.value, map));
         }
       } else {
         // unpack recursively
-        unpackedArray.push(unpack({ obj: item, map }));
+        unpackedArray.push(unpack(item, map));
       }
     } else {
       unpackedArray.push(item);
@@ -43,10 +51,10 @@ export const unpackArray = ({ arr, map }) => {
  * inserts claims if disclosed
  * removes any undisclosed claims
  */
-export const unpack = ({ obj, map }) => {
+export const unpack = (obj: any, map: SDMap) => {
   if (obj instanceof Object) {
     if (obj instanceof Array) {
-      return unpackArray({ arr: obj, map });
+      return unpackArray(obj, map);
     }
 
     for (const key in obj) {
@@ -54,20 +62,20 @@ export const unpack = ({ obj, map }) => {
       // recursively unpack
       if (
         key !== SD_DIGEST &&
-        key !== SD_LIST_PREFIX &&
+        key !== SD_LIST_KEY &&
         obj[key] instanceof Object
       ) {
-        obj[key] = unpack({ obj: obj[key], map });
+        obj[key] = unpack(obj[key], map);
       }
     }
 
     const { _sd, ...payload } = obj;
-    const claims = {};
+    const claims: any = {};
     if (_sd) {
-      _sd.forEach((hash) => {
+      _sd.forEach((hash: string) => {
         const disclosed = map[hash];
-        if (disclosed) {
-          claims[disclosed.key] = unpack({ obj: disclosed.value, map });
+        if (disclosed && disclosed.key) {
+          claims[disclosed.key] = unpack(disclosed.value, map);
         }
       });
     }
@@ -75,39 +83,6 @@ export const unpack = ({ obj, map }) => {
     return Object.assign(payload, claims);
   }
   return obj;
-};
-
-/**
- * Helpers for packSDJWT
- */
-
-export const createDisclosure = (
-  claim: DisclosureClaim,
-  hasher: Hasher,
-  options?: {
-    generateSalt?: SaltGenerator;
-  },
-): {
-  hash: string;
-  disclosure: string;
-} => {
-  let disclosureArray;
-  const saltGenerator = options?.generateSalt
-    ? options.generateSalt
-    : generateSalt;
-  const salt = saltGenerator(16);
-  if (claim.key) {
-    disclosureArray = [salt, claim.key, claim.value];
-  } else {
-    disclosureArray = [salt, claim.value];
-  }
-
-  const disclosure = base64encode(JSON.stringify(disclosureArray));
-  const hash = hasher(disclosure);
-  return {
-    hash,
-    disclosure,
-  };
 };
 
 /**
@@ -130,6 +105,25 @@ const getParentSD = (
   }
 
   return [parent];
+};
+
+export const createSDMap = (encodedSDJwt: string, hasher: Hasher) => {
+  const sdjwt = SDJwt.fromEncode(encodedSDJwt);
+  const { jwt, disclosures } = sdjwt;
+  if (!jwt) return undefined;
+
+  if (!disclosures) {
+    return jwt.payload;
+  }
+
+  const disclosureMap = createDisclosureMap(disclosures, hasher);
+  const map = createHashMapping(disclosures, hasher);
+  const sdMap = unpackClaims(payload, map);
+
+  return {
+    sdMap,
+    disclosureMap,
+  };
 };
 
 export const createDisclosureMap = (

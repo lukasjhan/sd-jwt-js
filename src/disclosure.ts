@@ -5,9 +5,9 @@ import { Hasher } from './type';
 export type DisclosureData<T> = [string, string, T] | [string, T];
 
 export class Disclosure<T> {
-  private salt: string;
-  private key?: string;
-  private value: T;
+  public salt: string;
+  public key?: string;
+  public value: T;
   private _digest: string | undefined;
 
   public constructor(data: DisclosureData<T>) {
