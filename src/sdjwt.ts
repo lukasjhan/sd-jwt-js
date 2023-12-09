@@ -3,7 +3,14 @@ import { Disclosure } from './disclosure';
 import { SDJWTException } from './error';
 import { Jwt } from './jwt';
 import { KBJwt, kbHeader, kbPayload } from './kbjwt';
-import { DisclosureFrame, SD, SD_DIGEST, SD_SEPARATOR } from './type';
+import {
+  DisclosureFrame,
+  Hasher,
+  SD,
+  SD_DIGEST,
+  SD_LIST_KEY,
+  SD_SEPARATOR,
+} from './type';
 
 export type SDJwtData<
   Header extends Record<string, any>,
@@ -129,7 +136,7 @@ export const pack = <T extends object>(
 
   const sd = disclosureFrame[SD_DIGEST];
 
-  let packedClaims;
+  let packedClaims: any;
   let disclosures: any[] = [];
 
   if (claims instanceof Array) {
@@ -192,15 +199,94 @@ export const pack = <T extends object>(
         _sd.push(digest);
         disclosures.push(disclosure);
       } else {
-        // @ts-ignore
         packedClaims[key] = claim;
       }
     }
 
     if (_sd.length > 0) {
-      // @ts-ignore
       packedClaims[SD_DIGEST] = _sd.sort();
     }
   }
   return { packedClaims, disclosures };
+};
+
+export const unpackArray = (
+  arr: Array<any>,
+  map: Record<string, Disclosure<any>>,
+) => {
+  const unpackedArray: any[] = [];
+  arr.forEach((item) => {
+    if (item instanceof Object) {
+      // if Array item is { '...': <SD_HASH_DIGEST> }
+      if (item[SD_LIST_KEY]) {
+        const hash = item[SD_LIST_KEY];
+        const disclosed = map[hash];
+        if (disclosed) {
+          unpackedArray.push(unpack(disclosed.value, map));
+        }
+      } else {
+        // unpack recursively
+        unpackedArray.push(unpack(item, map));
+      }
+    } else {
+      unpackedArray.push(item);
+    }
+  });
+  return unpackedArray;
+};
+
+export const unpack = (obj: any, map: Record<string, Disclosure<any>>) => {
+  if (obj instanceof Object) {
+    if (obj instanceof Array) {
+      return unpackArray(obj, map);
+    }
+
+    for (const key in obj) {
+      // if obj property value is an object
+      // recursively unpack
+      if (
+        key !== SD_DIGEST &&
+        key !== SD_LIST_KEY &&
+        obj[key] instanceof Object
+      ) {
+        obj[key] = unpack(obj[key], map);
+      }
+    }
+
+    const { _sd, ...payload } = obj;
+    const claims: any = {};
+    if (_sd) {
+      _sd.forEach((hash: string) => {
+        const disclosed = map[hash];
+        if (disclosed && disclosed.key) {
+          claims[disclosed.key] = unpack(disclosed.value, map);
+        }
+      });
+    }
+
+    return Object.assign(payload, claims);
+  }
+  return obj;
+};
+
+export const createHashMapping = (
+  disclosures: Array<Disclosure<any>>,
+  hasher: Hasher = hash,
+) => {
+  const map: Record<string, Disclosure<any>> = {};
+  disclosures.forEach((disclosure) => {
+    const digest = disclosure.digest(hasher);
+    map[digest] = disclosure;
+  });
+  return map;
+};
+
+export const unpackSDJWT = (
+  sdjwt: any,
+  disclosures: Array<Disclosure<any>>,
+) => {
+  const map = createHashMapping(disclosures);
+
+  const { _sd_alg, ...payload } = sdjwt;
+  return unpack(payload, map);
 };

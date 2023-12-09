@@ -58,7 +58,8 @@ a(claims4, {
 });
 */
 
-import { pack } from './sdjwt';
+import { Disclosure } from './disclosure';
+import { pack, unpackSDJWT } from './sdjwt';
 
 function A() {
   const claims = {
@@ -136,3 +137,24 @@ console.log('================================================================');
 C();
 console.log('================================================================');
 D();
+
+function E() {
+  const sdjwt = {
+    nicknames: [
+      {
+        '...':
+          'ZTM0YjdhZTg4ODliNDkwMDNkZjFlMWU2OTE0NTlhZDk3OGJkMDc4MmE0ZWE1YmYwMTRkNTI5NDU0MGM0ZTE3OA',
+      },
+      'JD',
+    ],
+  };
+
+  const disclosures = [
+    new Disclosure(['452c6bca32bdaeb6ea1d9282e63e9369', 'Johnny']),
+  ];
+
+  const ret = unpackSDJWT(sdjwt, disclosures);
+  console.log(ret);
+}
+console.log('unpack:');
+E();
