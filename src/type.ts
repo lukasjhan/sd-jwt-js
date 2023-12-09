@@ -3,6 +3,7 @@ import { Jwt } from './jwt';
 export const SD_SEPARATOR = '~';
 export const SD_LIST_KEY = '...';
 export const SD_DIGEST = '_sd';
+export const SD_JWT_TYP = 'sd+jwt';
 
 export type SDJWTCompact = string;
 

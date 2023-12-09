@@ -110,7 +110,7 @@ export class SDJwt<
 
     if (this.disclosures && this.disclosures.length > 0) {
       const encodeddisclosures = this.disclosures
-        .map((dc) => data.push(dc.encode()))
+        .map((dc) => dc.encode())
         .join(SD_SEPARATOR);
       data.push(encodeddisclosures);
     }

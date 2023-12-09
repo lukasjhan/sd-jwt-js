@@ -58,6 +58,7 @@ a(claims4, {
 });
 */
 
+/*
 import { Disclosure } from './disclosure';
 import { pack, unpack } from './sdjwt';
 
@@ -158,3 +159,18 @@ function E() {
 }
 console.log('unpack:');
 E();
+*/
+
+import sdjwt from './index';
+
+sdjwt
+  .issue(
+    {
+      firstname: 'John',
+      lastname: 'Doe',
+    },
+    {
+      _sd: ['firstname'],
+    },
+  )
+  .then((data) => console.log(data));
