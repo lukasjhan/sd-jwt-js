@@ -17,6 +17,7 @@ export const defaultConfig: Required<SDJWTConfig> = {
 
 export class SDJwtInstance {
   private userConfig: SDJWTConfig = {};
+  private defaultSigner = new DefaultSigner();
 
   constructor(userConfig?: SDJWTConfig) {
     if (userConfig) {
@@ -38,7 +39,6 @@ export class SDJwtInstance {
       header?: Header;
     },
   ): Promise<string> {
-    const defaultSigner = new DefaultSigner();
     const { packedClaims, disclosures } = pack(payload, disclosureFrame);
     const jwt = new Jwt({
       header: { alg: 'EdDSA', ...options?.header, typ: SD_JWT_TYP },
@@ -47,7 +47,7 @@ export class SDJwtInstance {
         _sd_alg: 'sha-256',
       },
     });
-    jwt.setSigner(defaultSigner.getSigner());
+    jwt.setSigner(this.defaultSigner.getSigner());
     await jwt.sign();
 
     const sdJwt = new SDJwt({
@@ -75,7 +75,14 @@ export class SDJwtInstance {
   }
 
   public async validate(encodedSDJwt: string): Promise<boolean> {
-    return false;
+    const sdjwt = SDJwt.fromEncode(encodedSDJwt);
+    if (!sdjwt.jwt) {
+      return false;
+    }
+
+    sdjwt.jwt.setVerifier(this.defaultSigner.getVerifier());
+    const verified = await sdjwt.jwt.verify();
+    return verified;
   }
 
   public config(newConfig: SDJWTConfig) {

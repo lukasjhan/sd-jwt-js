@@ -163,8 +163,8 @@ E();
 
 import sdjwt from './index';
 
-sdjwt
-  .issue(
+(async () => {
+  const encodedSdjwt = await sdjwt.issue(
     {
       firstname: 'John',
       lastname: 'Doe',
@@ -172,5 +172,8 @@ sdjwt
     {
       _sd: ['firstname'],
     },
-  )
-  .then((data) => console.log(data));
+  );
+  console.log(encodedSdjwt);
+  const validated = await sdjwt.validate(encodedSdjwt);
+  console.log(validated);
+})();
