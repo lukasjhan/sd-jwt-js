@@ -32,3 +32,27 @@ export type DisclosureFrame = {
 };
 
 export type PresentationFrame = DisclosureFrame;
+
+type NonNever<T> = {
+  [P in keyof T as T[P] extends never ? never : P]: T[P];
+};
+
+type sd<Payload> = { _sd?: Array<keyof Payload> };
+
+type BaseFrame<Payload> = Payload extends Array<infer U>
+  ? {
+      [K in keyof Payload]: Payload[K] extends object
+        ? BaseFrame<Payload[K]>
+        : never;
+    } & sd<Payload>
+  : Payload extends Record<string, unknown>
+  ? NonNever<
+      {
+        [K in keyof Payload]: Payload[K] extends object
+          ? BaseFrame<Payload[K]>
+          : never;
+      } & sd<Payload>
+    >
+  : sd<Payload>;
+
+export type Frame<T> = BaseFrame<T>;
