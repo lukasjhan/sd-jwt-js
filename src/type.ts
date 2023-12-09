@@ -26,33 +26,26 @@ export type Verifier = (data: string, sig: Uint8Array) => OrPromise<boolean>;
 export type Hasher = (data: string) => string;
 export type SaltGenerator = (length: number) => string;
 
-export type DisclosureFrame = {
-  [key: string | number]: DisclosureFrame | unknown;
-  _sd?: Array<string | number>;
-};
-
-export type PresentationFrame = DisclosureFrame;
-
 type NonNever<T> = {
   [P in keyof T as T[P] extends never ? never : P]: T[P];
 };
 
-type sd<Payload> = { _sd?: Array<keyof Payload> };
+type SD<Payload> = { _sd?: Array<keyof Payload> };
 
 type BaseFrame<Payload> = Payload extends Array<infer U>
-  ? {
-      [K in keyof Payload]: Payload[K] extends object
-        ? BaseFrame<Payload[K]>
-        : never;
-    } & sd<Payload>
+  ? U extends object
+    ? Record<number, BaseFrame<U>> & SD<Payload>
+    : SD<Payload>
   : Payload extends Record<string, unknown>
   ? NonNever<
       {
         [K in keyof Payload]: Payload[K] extends object
           ? BaseFrame<Payload[K]>
           : never;
-      } & sd<Payload>
+      } & SD<Payload>
     >
-  : sd<Payload>;
+  : SD<Payload>;
 
 export type Frame<T> = BaseFrame<T>;
+export type DisclosureFrame<T> = Frame<T>;
+export type PresentationFrame<T> = DisclosureFrame<T>;
