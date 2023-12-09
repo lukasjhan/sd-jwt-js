@@ -119,8 +119,36 @@ export class SDJwt<
     return data.join(SD_SEPARATOR);
   }
 
-  public find(key: string) {}
+  public keys(): string[] {
+    return listKeys(this.getClaims());
+  }
+
+  public getClaims<T>() {
+    if (!this.jwt?.payload || !this.disclosures) {
+      throw new SDJWTException('Invalid sd-jwt: jwt or disclosures is missing');
+    }
+    return unpack(this.jwt?.payload, this.disclosures) as T;
+  }
 }
+
+const listKeys = (obj: any, prefix: string = '') => {
+  const keys: string[] = [];
+  for (let key in obj) {
+    if (obj[key] == null) continue;
+    const newKey = prefix ? `${prefix}.${key}` : key;
+    keys.push(newKey);
+
+    if (
+      obj[key] &&
+      typeof obj[key] === 'object' &&
+      !Array.isArray(obj[key]) &&
+      obj[key] !== null
+    ) {
+      keys.push(...listKeys(obj[key], newKey));
+    }
+  }
+  return keys;
+};
 
 // TODO: add decoy option
 export const pack = <T extends object>(
@@ -281,9 +309,12 @@ export const createHashMapping = (
   return map;
 };
 
-export const unpack = (sdjwt: any, disclosures: Array<Disclosure<any>>) => {
+export const unpack = (
+  sdjwtPayload: any,
+  disclosures: Array<Disclosure<any>>,
+) => {
   const map = createHashMapping(disclosures);
 
-  const { _sd_alg, ...payload } = sdjwt;
+  const { _sd_alg, ...payload } = sdjwtPayload;
   return unpackObj(payload, map);
 };

@@ -73,7 +73,24 @@ export class SDJwtInstance {
     requiredClaimKeys?: string[],
     options?: any,
   ): Promise<boolean> {
-    return false;
+    const sdjwt = SDJwt.fromEncode(encodedSDJwt);
+    if (!sdjwt.jwt) {
+      return false;
+    }
+    const validated = this.validate(encodedSDJwt);
+    if (!validated) {
+      return false;
+    }
+
+    if (requiredClaimKeys) {
+      const keys = sdjwt.keys();
+      const missingKeys = requiredClaimKeys.filter((k) => !keys.includes(k));
+      if (missingKeys.length > 0) {
+        return false;
+      }
+    }
+
+    return true;
   }
 
   public async validate(encodedSDJwt: string): Promise<boolean> {
