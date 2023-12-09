@@ -1,8 +1,9 @@
-import { SD_SEPARATOR } from './constant';
+import { generateSalt, hash } from './crypto';
 import { Disclosure } from './disclosure';
 import { SDJWTException } from './error';
 import { Jwt } from './jwt';
 import { KBJwt, kbHeader, kbPayload } from './kbjwt';
+import { DisclosureFrame, SD, SD_DIGEST, SD_SEPARATOR } from './type';
 
 export type SDJwtData<
   Header extends Record<string, any>,
@@ -113,3 +114,93 @@ export class SDJwt<
 
   public find(key: string) {}
 }
+
+// TODO: add decoy option
+export const pack = <T extends object>(
+  claims: T,
+  disclosureFrame?: DisclosureFrame<T>,
+): { packedClaims: any; disclosures: Array<Disclosure<any>> } => {
+  if (!disclosureFrame) {
+    return {
+      packedClaims: claims,
+      disclosures: [],
+    };
+  }
+
+  const sd = disclosureFrame[SD_DIGEST];
+
+  let packedClaims;
+  let disclosures: any[] = [];
+
+  if (claims instanceof Array) {
+    packedClaims = [];
+    const recursivelyPackedClaims: any = {};
+
+    for (const key in disclosureFrame) {
+      if (key !== SD_DIGEST) {
+        const idx = parseInt(key);
+        // @ts-ignore
+        const packed = pack(claims[idx], disclosureFrame[idx]);
+        recursivelyPackedClaims[idx] = packed.packedClaims;
+        disclosures = disclosures.concat(packed.disclosures);
+      }
+    }
+
+    for (let i = 0; i < (claims as Array<any>).length; i++) {
+      const claim = recursivelyPackedClaims[i]
+        ? recursivelyPackedClaims[i]
+        : claims[i];
+      // @ts-ignore
+      if (sd?.includes(i)) {
+        const salt = generateSalt(16);
+        const disclosure = new Disclosure([salt, claim]);
+        const digest = disclosure.digest(hash);
+        packedClaims.push({ '...': digest });
+        disclosures.push(disclosure);
+      } else {
+        packedClaims.push(claim);
+      }
+    }
+    return { packedClaims, disclosures };
+  } else {
+    packedClaims = {};
+    const recursivelyPackedClaims: any = {};
+    for (const key in disclosureFrame) {
+      if (key !== SD_DIGEST) {
+        const packed = pack(
+          // @ts-ignore
+          claims[key],
+          disclosureFrame[key],
+        );
+        recursivelyPackedClaims[key] = packed.packedClaims;
+        disclosures = disclosures.concat(packed.disclosures);
+      }
+    }
+
+    const _sd: string[] = [];
+
+    for (const key in claims) {
+      const claim = recursivelyPackedClaims[key]
+        ? recursivelyPackedClaims[key]
+        : claims[key];
+      // @ts-ignore
+      if (sd?.includes(key)) {
+        const salt = generateSalt(16);
+        const disclosure = new Disclosure([salt, key, claim]);
+        const digest = disclosure.digest(hash);
+
+        _sd.push(digest);
+        disclosures.push(disclosure);
+      } else {
+        // @ts-ignore
+        packedClaims[key] = claim;
+      }
+    }
+
+    if (_sd.length > 0) {
+      // @ts-ignore
+      packedClaims[SD_DIGEST] = _sd.sort();
+    }
+  }
+  return { packedClaims, disclosures };
+};

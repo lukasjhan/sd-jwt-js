@@ -1,5 +1,9 @@
 import { Jwt } from './jwt';
 
+export const SD_SEPARATOR = '~';
+export const SD_LIST_KEY = '...';
+export const SD_DIGEST = '_sd';
+
 export type SDJWTCompact = string;
 
 export type SDJWTConfig = {
@@ -30,7 +34,7 @@ type NonNever<T> = {
   [P in keyof T as T[P] extends never ? never : P]: T[P];
 };
 
-type SD<Payload> = { _sd?: Array<keyof Payload> };
+export type SD<Payload> = { [SD_DIGEST]?: Array<keyof Payload> };
 
 type BaseFrame<Payload> = Payload extends Array<infer U>
   ? U extends object
@@ -39,7 +43,7 @@ type BaseFrame<Payload> = Payload extends Array<infer U>
   : Payload extends Record<string, unknown>
   ? NonNever<
       {
-        [K in keyof Payload]: Payload[K] extends object
+        [K in keyof Payload]?: Payload[K] extends object
           ? BaseFrame<Payload[K]>
           : never;
       } & SD<Payload>
