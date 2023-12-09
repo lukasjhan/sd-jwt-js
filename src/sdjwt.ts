@@ -222,11 +222,11 @@ export const unpackArray = (
         const hash = item[SD_LIST_KEY];
         const disclosed = map[hash];
         if (disclosed) {
-          unpackedArray.push(unpack(disclosed.value, map));
+          unpackedArray.push(unpackObj(disclosed.value, map));
         }
       } else {
         // unpack recursively
-        unpackedArray.push(unpack(item, map));
+        unpackedArray.push(unpackObj(item, map));
       }
     } else {
       unpackedArray.push(item);
@@ -235,7 +235,7 @@ export const unpackArray = (
   return unpackedArray;
 };
 
-export const unpack = (obj: any, map: Record<string, Disclosure<any>>) => {
+export const unpackObj = (obj: any, map: Record<string, Disclosure<any>>) => {
   if (obj instanceof Object) {
     if (obj instanceof Array) {
       return unpackArray(obj, map);
@@ -249,7 +249,7 @@ export const unpack = (obj: any, map: Record<string, Disclosure<any>>) => {
         key !== SD_LIST_KEY &&
         obj[key] instanceof Object
       ) {
-        obj[key] = unpack(obj[key], map);
+        obj[key] = unpackObj(obj[key], map);
       }
     }
 
@@ -259,7 +259,7 @@ export const unpack = (obj: any, map: Record<string, Disclosure<any>>) => {
       _sd.forEach((hash: string) => {
         const disclosed = map[hash];
         if (disclosed && disclosed.key) {
-          claims[disclosed.key] = unpack(disclosed.value, map);
+          claims[disclosed.key] = unpackObj(disclosed.value, map);
         }
       });
     }
@@ -281,12 +281,9 @@ export const createHashMapping = (
   return map;
 };
 
-export const unpackSDJWT = (
-  sdjwt: any,
-  disclosures: Array<Disclosure<any>>,
-) => {
+export const unpack = (sdjwt: any, disclosures: Array<Disclosure<any>>) => {
   const map = createHashMapping(disclosures);
 
   const { _sd_alg, ...payload } = sdjwt;
-  return unpack(payload, map);
+  return unpackObj(payload, map);
 };

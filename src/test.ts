@@ -59,7 +59,7 @@ a(claims4, {
 */
 
 import { Disclosure } from './disclosure';
-import { pack, unpackSDJWT } from './sdjwt';
+import { pack, unpack } from './sdjwt';
 
 function A() {
   const claims = {
@@ -153,7 +153,7 @@ function E() {
     new Disclosure(['452c6bca32bdaeb6ea1d9282e63e9369', 'Johnny']),
   ];
 
-  const ret = unpackSDJWT(sdjwt, disclosures);
+  const ret = unpack(sdjwt, disclosures);
   console.log(ret);
 }
 console.log('unpack:');
