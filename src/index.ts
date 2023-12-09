@@ -1,4 +1,5 @@
-import { DefaultSigner, generateSalt, hash } from './crypto';
+import { KeyObject } from 'crypto';
+import { createKeyPair, generateSalt, hash } from './crypto';
 import { Jwt } from './jwt';
 import { SDJwt, pack } from './sdjwt';
 import {
@@ -17,38 +18,39 @@ export const defaultConfig: Required<SDJWTConfig> = {
 
 export class SDJwtInstance {
   private userConfig: SDJWTConfig = {};
-  private defaultSigner = new DefaultSigner();
+  private publicKey: KeyObject;
+  private privateKey: KeyObject;
 
   constructor(userConfig?: SDJWTConfig) {
     if (userConfig) {
       this.userConfig = userConfig;
     }
+    const { privateKey, publicKey } = createKeyPair();
+    this.privateKey = privateKey;
+    this.publicKey = publicKey;
   }
 
   public create(userConfig?: SDJWTConfig): SDJwtInstance {
     return new SDJwtInstance(userConfig);
   }
 
-  public async issue<
-    Header extends Record<string, any>,
-    Payload extends object,
-  >(
+  public async issue<Payload extends object>(
     payload: Payload,
     disclosureFrame?: DisclosureFrame<Payload>,
     options?: {
-      header?: Header;
+      sign_alg?: string;
+      hash_alg?: string;
     },
   ): Promise<string> {
     const { packedClaims, disclosures } = pack(payload, disclosureFrame);
     const jwt = new Jwt({
-      header: { alg: 'EdDSA', ...options?.header, typ: SD_JWT_TYP },
+      header: { alg: options?.sign_alg ?? 'EdDSA', typ: SD_JWT_TYP },
       payload: {
         ...packedClaims,
-        _sd_alg: 'sha-256',
+        _sd_alg: options?.hash_alg ?? 'sha-256',
       },
     });
-    jwt.setSigner(this.defaultSigner.getSigner());
-    await jwt.sign();
+    await jwt.sign(this.privateKey);
 
     const sdJwt = new SDJwt({
       jwt,
@@ -80,8 +82,7 @@ export class SDJwtInstance {
       return false;
     }
 
-    sdjwt.jwt.setVerifier(this.defaultSigner.getVerifier());
-    const verified = await sdjwt.jwt.verify();
+    const verified = await sdjwt.jwt.verify(this.publicKey);
     return verified;
   }
 

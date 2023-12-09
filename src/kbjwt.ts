@@ -1,3 +1,4 @@
+import { KeyLike } from 'jose';
 import { SDJWTException } from './error';
 import { Jwt } from './jwt';
 
@@ -13,7 +14,7 @@ export class KBJwt<
   Header extends kbHeader = kbHeader,
   Payload extends kbPayload = kbPayload,
 > extends Jwt<Header, Payload> {
-  public async verify() {
+  public async verify(publicKey: Uint8Array | KeyLike) {
     if (
       !this.header?.alg ||
       !this.header.typ ||
@@ -24,7 +25,7 @@ export class KBJwt<
     ) {
       throw new SDJWTException('Invalid Key Binding Jwt');
     }
-    return await super.verify();
+    return await super.verify(publicKey);
   }
 
   public static fromKBEncode<
