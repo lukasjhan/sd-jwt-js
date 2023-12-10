@@ -94,7 +94,29 @@ export class SDJwt<
     });
   }
 
-  public present() {}
+  public present(keys: string[]): string {
+    if (!this.jwt?.payload || !this.disclosures) {
+      throw new SDJWTException('Invalid sd-jwt: jwt or disclosures is missing');
+    }
+
+    const hashmap = createHashMapping(this.disclosures);
+    const { disclosureKeymap } = unpack(this.jwt?.payload, this.disclosures);
+
+    const presentableKeys = Object.keys(disclosureKeymap);
+    const missingKeys = keys.filter((k) => !presentableKeys.includes(k));
+    if (missingKeys.length > 0) {
+      throw new SDJWTException(
+        `Invalid sd-jwt: invalid present keys: ${missingKeys.join(', ')}`,
+      );
+    }
+
+    const disclosures = keys.map((k) => hashmap[disclosureKeymap[k]]);
+    const presentSDJwt = new SDJwt({
+      jwt: this.jwt,
+      disclosures,
+    });
+    return presentSDJwt.encodeSDJwt();
+  }
 
   public verify() {}
 
@@ -127,8 +149,9 @@ export class SDJwt<
     if (!this.jwt?.payload || !this.disclosures) {
       throw new SDJWTException('Invalid sd-jwt: jwt or disclosures is missing');
     }
-    const { disclosureKeys } = unpack(this.jwt?.payload, this.disclosures);
-    return disclosureKeys;
+    const { disclosureKeymap } = unpack(this.jwt?.payload, this.disclosures);
+    console.log('11', disclosureKeymap);
+    return Object.keys(disclosureKeymap);
   }
 
   public getClaims<T>() {
@@ -246,8 +269,8 @@ export const unpackArray = (
   arr: Array<any>,
   map: Record<string, Disclosure<any>>,
   prefix: string = '',
-): { unpackedObj: any; disclosureKeys: string[] } => {
-  const keys: string[] = [];
+): { unpackedObj: any; disclosureKeymap: Record<string, string> } => {
+  const keys: Record<string, string> = {};
   const unpackedArray: any[] = [];
   arr.forEach((item, idx) => {
     if (item instanceof Object) {
@@ -257,35 +280,39 @@ export const unpackArray = (
         const disclosed = map[hash];
         if (disclosed) {
           const presentKey = prefix ? `${prefix}.${idx}` : `${idx}`;
-          keys.push(presentKey);
+          keys[presentKey] = hash;
 
-          const { unpackedObj, disclosureKeys } = unpackObj(
+          const { unpackedObj, disclosureKeymap: disclosureKeys } = unpackObj(
             disclosed.value,
             map,
             presentKey,
           );
           unpackedArray.push(unpackedObj);
-          keys.push(...disclosureKeys);
+          Object.assign(keys, disclosureKeys);
         }
       } else {
         // unpack recursively
-        const { unpackedObj, disclosureKeys } = unpackObj(item, map, prefix);
+        const { unpackedObj, disclosureKeymap: disclosureKeys } = unpackObj(
+          item,
+          map,
+          prefix,
+        );
         unpackedArray.push(unpackedObj);
-        keys.push(...disclosureKeys);
+        Object.assign(keys, disclosureKeys);
       }
     } else {
       unpackedArray.push(item);
     }
   });
-  return { unpackedObj: unpackedArray, disclosureKeys: keys };
+  return { unpackedObj: unpackedArray, disclosureKeymap: keys };
 };
 
 export const unpackObj = (
   obj: any,
   map: Record<string, Disclosure<any>>,
   prefix: string = '',
-): { unpackedObj: any; disclosureKeys: string[] } => {
-  const keys: string[] = [];
+): { unpackedObj: any; disclosureKeymap: Record<string, string> } => {
+  const keys: Record<string, string> = {};
   if (obj instanceof Object) {
     if (obj instanceof Array) {
       return unpackArray(obj, map, prefix);
@@ -299,13 +326,13 @@ export const unpackObj = (
         key !== SD_LIST_KEY &&
         obj[key] instanceof Object
       ) {
-        const { unpackedObj, disclosureKeys } = unpackObj(
+        const { unpackedObj, disclosureKeymap: disclosureKeys } = unpackObj(
           obj[key],
           map,
           prefix,
         );
         obj[key] = unpackedObj;
-        keys.push(...disclosureKeys);
+        Object.assign(keys, disclosureKeys);
       }
     }
 
@@ -318,23 +345,23 @@ export const unpackObj = (
           const presentKey = prefix
             ? `${prefix}.${disclosed.key}`
             : disclosed.key;
-          keys.push(presentKey);
+          keys[presentKey] = hash;
 
-          const { unpackedObj, disclosureKeys } = unpackObj(
+          const { unpackedObj, disclosureKeymap: disclosureKeys } = unpackObj(
             disclosed.value,
             map,
             presentKey,
           );
           claims[disclosed.key] = unpackedObj;
-          keys.push(...disclosureKeys);
+          Object.assign(keys, disclosureKeys);
         }
       });
     }
 
     const unpackedObj = Object.assign(payload, claims);
-    return { unpackedObj, disclosureKeys: keys };
+    return { unpackedObj, disclosureKeymap: keys };
   }
-  return { unpackedObj: obj, disclosureKeys: keys };
+  return { unpackedObj: obj, disclosureKeymap: keys };
 };
 
 export const createHashMapping = (

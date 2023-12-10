@@ -225,4 +225,11 @@ import sdjwt from './index';
     claim: JSON.stringify(decoded.jwt?.payload, null, 2),
     keys,
   });
+
+  console.log(
+    '================================================================',
+  );
+
+  const res = decoded.present(['firstname', 'id']);
+  console.log(res);
 })();
