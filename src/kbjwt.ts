@@ -1,14 +1,7 @@
 import { KeyLike } from 'jose';
 import { SDJWTException } from './error';
 import { Jwt } from './jwt';
-
-export type kbHeader = { typ: string; alg: string };
-export type kbPayload = {
-  iat: string;
-  aud: string;
-  nonce: string;
-  _sd_hash: string;
-};
+import { kbHeader, kbPayload } from './type';
 
 export class KBJwt<
   Header extends kbHeader = kbHeader,

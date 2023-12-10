@@ -2,13 +2,15 @@ import { generateSalt, hash } from './crypto';
 import { Disclosure } from './disclosure';
 import { SDJWTException } from './error';
 import { Jwt } from './jwt';
-import { KBJwt, kbHeader, kbPayload } from './kbjwt';
+import { KBJwt } from './kbjwt';
 import {
   DisclosureFrame,
   Hasher,
   SD_DIGEST,
   SD_LIST_KEY,
   SD_SEPARATOR,
+  kbHeader,
+  kbPayload,
 } from './type';
 
 export type SDJwtData<

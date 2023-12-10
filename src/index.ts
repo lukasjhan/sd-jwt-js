@@ -1,7 +1,8 @@
 import { generateSalt, hash } from './crypto';
 import { Jwt } from './jwt';
+import { KBJwt } from './kbjwt';
 import { SDJwt, pack } from './sdjwt';
-import { DisclosureFrame, SDJWTConfig, SD_JWT_TYP } from './type';
+import { DisclosureFrame, SDJWTConfig, SD_JWT_TYP, kbPayload } from './type';
 import { KeyLike } from 'jose';
 
 export const defaultConfig: Required<SDJWTConfig> = {
@@ -27,6 +28,22 @@ export class SDJwtInstance {
     return new SDJwtInstance(userConfig);
   }
 
+  private async createKBJwt(
+    payload: kbPayload,
+    privateKey: Uint8Array | KeyLike,
+    alg: string,
+  ): Promise<KBJwt> {
+    const kbJwt = new KBJwt({
+      header: {
+        typ: 'kb+jwt',
+        alg,
+      },
+      payload,
+    });
+    await kbJwt.sign(privateKey);
+    return kbJwt;
+  }
+
   public async issue<Payload extends object>(
     payload: Payload,
     privateKey: Uint8Array | KeyLike,
@@ -34,6 +51,11 @@ export class SDJwtInstance {
     options?: {
       sign_alg?: string;
       hash_alg?: string;
+      kb?: {
+        alg: string;
+        payload: kbPayload;
+        privateKey: Uint8Array | KeyLike;
+      };
     },
   ): Promise<string> {
     const { packedClaims, disclosures } = pack(payload, disclosureFrame);
@@ -48,9 +70,18 @@ export class SDJwtInstance {
     });
     await jwt.sign(privateKey);
 
+    const kbJwt = options?.kb
+      ? await this.createKBJwt(
+          options.kb.payload,
+          options.kb.privateKey,
+          options.kb.alg,
+        )
+      : undefined;
+
     const sdJwt = new SDJwt({
       jwt,
       disclosures,
+      kbJwt,
     });
 
     return sdJwt.encodeSDJwt();
@@ -66,7 +97,11 @@ export class SDJwtInstance {
     encodedSDJwt: string,
     publicKey: Uint8Array | KeyLike,
     requiredClaimKeys?: string[],
-    options?: any,
+    options?: {
+      kb?: {
+        publicKey: Uint8Array | KeyLike;
+      };
+    },
   ): Promise<boolean> {
     const sdjwt = SDJwt.fromEncode(encodedSDJwt);
     if (!sdjwt.jwt) {
@@ -81,6 +116,16 @@ export class SDJwtInstance {
       const keys = sdjwt.keys();
       const missingKeys = requiredClaimKeys.filter((k) => !keys.includes(k));
       if (missingKeys.length > 0) {
+        return false;
+      }
+    }
+
+    if (options?.kb) {
+      if (!sdjwt.kbJwt) {
+        return false;
+      }
+      const kbVerified = await sdjwt.kbJwt.verify(options.kb.publicKey);
+      if (!kbVerified) {
         return false;
       }
     }
