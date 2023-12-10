@@ -56,6 +56,21 @@ a(claims4, {
     _sd: [1],
   },
 });
+
+const claims5 = {
+  colors: [
+    ['R', 'G', 'B'],
+    ['C', 'Y', 'M', 'K'],
+  ],
+};
+
+a(claims5, {
+  colors: {
+    0: {
+      _sd: [0, 2],
+    },
+  },
+});
 */
 
 /*
@@ -162,75 +177,52 @@ E();
 */
 
 import sdjwt from './index';
-import * as jose from 'jose';
 
 (async () => {
   const encodedSdjwt = await sdjwt.issue(
     {
       firstname: 'John',
       lastname: 'Doe',
+      ssn: '123-45-6789',
+      id: '1234',
+      data: {
+        firstname: 'John',
+        lastname: 'Doe',
+        ssn: '123-45-6789',
+        list: [{ r: '1' }, 'b', 'c'],
+      },
+      data2: {
+        hi: 'bye',
+      },
     },
     {
-      _sd: ['firstname'],
+      _sd: ['firstname', 'id', 'data2'],
+      data: {
+        _sd: ['list'],
+        list: {
+          _sd: [0, 2],
+          0: {
+            _sd: ['r'],
+          },
+        },
+      },
+      data2: {
+        _sd: ['hi'],
+      },
     },
   );
   console.log(encodedSdjwt);
   const validated = await sdjwt.validate(encodedSdjwt);
   console.log(validated);
 
-  const secret = new TextEncoder().encode(
-    'cc7e0d44fd473002f1c42167459001140ec6389b7353f8088f4d9a95f2f596f2',
-  );
-
-  const alg = 'HS256';
-
-  const jwt = await new jose.SignJWT({ 'urn:example:claim': true })
-    .setProtectedHeader({ alg })
-    .sign(secret);
-  console.log(jwt);
-  const verified = await jose.jwtVerify(jwt, secret);
-  console.log({ verified });
-  const payload = jose.decodeJwt(jwt);
-  console.log(payload);
+  const decoded = sdjwt.decode(encodedSdjwt);
+  console.log({ keys: decoded.keys() });
+  const paylaods = decoded.getClaims();
+  const keys = decoded.presentableKeys();
+  console.log({
+    paylaods: JSON.stringify(paylaods, null, 2),
+    disclosures: JSON.stringify(decoded.disclosures, null, 2),
+    claim: JSON.stringify(decoded.jwt?.payload, null, 2),
+    keys,
+  });
 })();
-
-const listKeys = (obj: any, prefix: string = '') => {
-  const keys: string[] = [];
-  for (let key in obj) {
-    if (obj[key] == null) continue;
-    // Construct the new key
-    const newKey = prefix ? `${prefix}.${key}` : key;
-
-    // Add the key to the list
-    keys.push(newKey);
-
-    // If the value is an object, recurse
-    if (
-      obj[key] &&
-      typeof obj[key] === 'object' &&
-      !Array.isArray(obj[key]) &&
-      obj[key] !== null
-    ) {
-      keys.push(...listKeys(obj[key], newKey));
-    }
-  }
-  return keys;
-};
-
-console.log(
-  listKeys({
-    address: {
-      street: '123 Main St',
-      suburb: 'Anytown',
-      postcode: {
-        code: '1234',
-        by: '24',
-        to: {
-          city: 'Anytown',
-          no: null,
-          time: undefined,
-        },
-      },
-    },
-  }),
-);
