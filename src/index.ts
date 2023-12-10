@@ -12,6 +12,9 @@ export const defaultConfig: Required<SDJWTConfig> = {
 };
 
 export class SDJwtInstance {
+  public static DEFAULT_ALG = 'EdDSA';
+  public static DEFAULT_HASH_ALG = 'sha-256';
+
   private userConfig: SDJWTConfig = {};
 
   constructor(userConfig?: SDJWTConfig) {
@@ -34,13 +37,13 @@ export class SDJwtInstance {
     },
   ): Promise<string> {
     const { packedClaims, disclosures } = pack(payload, disclosureFrame);
-    const alg = options?.sign_alg ?? 'EdDSA';
+    const alg = options?.sign_alg ?? SDJwtInstance.DEFAULT_ALG;
     const header = this.userConfig.omitTyp ? { alg } : { alg, typ: SD_JWT_TYP };
     const jwt = new Jwt({
       header,
       payload: {
         ...packedClaims,
-        _sd_alg: options?.hash_alg ?? 'sha-256',
+        _sd_alg: options?.hash_alg ?? SDJwtInstance.DEFAULT_HASH_ALG,
       },
     });
     await jwt.sign(privateKey);
