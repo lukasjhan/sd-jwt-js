@@ -38,8 +38,10 @@ export class SDJwtInstance {
     },
   ): Promise<string> {
     const { packedClaims, disclosures } = pack(payload, disclosureFrame);
+    const alg = options?.sign_alg ?? 'EdDSA';
+    const header = this.userConfig.omitTyp ? { alg } : { alg, typ: SD_JWT_TYP };
     const jwt = new Jwt({
-      header: { alg: options?.sign_alg ?? 'EdDSA', typ: SD_JWT_TYP },
+      header,
       payload: {
         ...packedClaims,
         _sd_alg: options?.hash_alg ?? 'sha-256',
