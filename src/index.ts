@@ -55,11 +55,7 @@ export class SDJwtInstance {
     return sdJwt.encodeSDJwt();
   }
 
-  public present<T>(
-    encodedSDJwt: string,
-    presentationKeys?: string[],
-    options?: any,
-  ): string {
+  public present<T>(encodedSDJwt: string, presentationKeys?: string[]): string {
     if (!presentationKeys) return encodedSDJwt;
     const sdjwt = SDJwt.fromEncode(encodedSDJwt);
     return sdjwt.present(presentationKeys);

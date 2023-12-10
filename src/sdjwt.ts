@@ -6,7 +6,6 @@ import { KBJwt, kbHeader, kbPayload } from './kbjwt';
 import {
   DisclosureFrame,
   Hasher,
-  SD,
   SD_DIGEST,
   SD_LIST_KEY,
   SD_SEPARATOR,
