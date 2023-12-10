@@ -1,5 +1,10 @@
-import { createKeyPair } from './crypto';
 import sdjwt from './index';
+import Crypto from 'node:crypto';
+
+export const createKeyPair = () => {
+  const { privateKey, publicKey } = Crypto.generateKeyPairSync('ed25519');
+  return { privateKey, publicKey };
+};
 
 (async () => {
   const { privateKey, publicKey } = createKeyPair();

@@ -1,6 +1,5 @@
 import { Base64Url } from './base64url';
 import { SDJWTException } from './error';
-import { Signer, Verifier } from './type';
 import * as jose from 'jose';
 
 export type JwtData<
