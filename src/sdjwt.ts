@@ -118,8 +118,6 @@ export class SDJwt<
     return presentSDJwt.encodeSDJwt();
   }
 
-  public verify() {}
-
   public encodeSDJwt() {
     const data: string[] = [];
 
@@ -150,7 +148,6 @@ export class SDJwt<
       throw new SDJWTException('Invalid sd-jwt: jwt or disclosures is missing');
     }
     const { disclosureKeymap } = unpack(this.jwt?.payload, this.disclosures);
-    console.log('11', disclosureKeymap);
     return Object.keys(disclosureKeymap);
   }
 

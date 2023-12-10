@@ -51,6 +51,4 @@ type BaseFrame<Payload> = Payload extends Array<infer U>
     >
   : SD<Payload>;
 
-export type Frame<T> = BaseFrame<T>;
-export type DisclosureFrame<T> = Frame<T>;
-export type PresentationFrame<T> = DisclosureFrame<T>;
+export type DisclosureFrame<T> = BaseFrame<T>;

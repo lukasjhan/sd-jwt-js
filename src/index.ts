@@ -2,12 +2,7 @@ import { KeyObject } from 'crypto';
 import { createKeyPair, generateSalt, hash } from './crypto';
 import { Jwt } from './jwt';
 import { SDJwt, pack } from './sdjwt';
-import {
-  DisclosureFrame,
-  PresentationFrame,
-  SDJWTConfig,
-  SD_JWT_TYP,
-} from './type';
+import { DisclosureFrame, SDJWTConfig, SD_JWT_TYP } from './type';
 
 export const defaultConfig: Required<SDJWTConfig> = {
   omitDecoy: false,
@@ -60,12 +55,14 @@ export class SDJwtInstance {
     return sdJwt.encodeSDJwt();
   }
 
-  public async present<T>(
+  public present<T>(
     encodedSDJwt: string,
-    presentationFrame?: PresentationFrame<T>,
+    presentationKeys?: string[],
     options?: any,
-  ): Promise<string> {
-    return '';
+  ): string {
+    if (!presentationKeys) return encodedSDJwt;
+    const sdjwt = SDJwt.fromEncode(encodedSDJwt);
+    return sdjwt.present(presentationKeys);
   }
 
   public async verify(
@@ -113,6 +110,16 @@ export class SDJwtInstance {
 
   public decode(endcodedSDJwt: string) {
     return SDJwt.fromEncode(endcodedSDJwt);
+  }
+
+  public keys(endcodedSDJwt: string) {
+    const sdjwt = SDJwt.fromEncode(endcodedSDJwt);
+    return sdjwt.keys();
+  }
+
+  public presentableKeys(endcodedSDJwt: string) {
+    const sdjwt = SDJwt.fromEncode(endcodedSDJwt);
+    return sdjwt.presentableKeys();
   }
 }
 
