@@ -1,6 +1,8 @@
+import { createKeyPair } from './crypto';
 import sdjwt from './index';
 
 (async () => {
+  const { privateKey, publicKey } = createKeyPair();
   const encodedSdjwt = await sdjwt.issue(
     {
       firstname: 'John',
@@ -17,6 +19,7 @@ import sdjwt from './index';
         hi: 'bye',
       },
     },
+    privateKey,
     {
       _sd: ['firstname', 'id', 'data2'],
       data: {
@@ -34,7 +37,7 @@ import sdjwt from './index';
     },
   );
   console.log(encodedSdjwt);
-  const validated = await sdjwt.validate(encodedSdjwt);
+  const validated = await sdjwt.validate(encodedSdjwt, publicKey);
   console.log(validated);
 
   const decoded = sdjwt.decode(encodedSdjwt);

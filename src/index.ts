@@ -1,8 +1,8 @@
-import { KeyObject } from 'crypto';
-import { createKeyPair, generateSalt, hash } from './crypto';
+import { generateSalt, hash } from './crypto';
 import { Jwt } from './jwt';
 import { SDJwt, pack } from './sdjwt';
 import { DisclosureFrame, SDJWTConfig, SD_JWT_TYP } from './type';
+import { KeyLike } from 'jose';
 
 export const defaultConfig: Required<SDJWTConfig> = {
   omitDecoy: false,
@@ -13,16 +13,11 @@ export const defaultConfig: Required<SDJWTConfig> = {
 
 export class SDJwtInstance {
   private userConfig: SDJWTConfig = {};
-  private publicKey: KeyObject;
-  private privateKey: KeyObject;
 
   constructor(userConfig?: SDJWTConfig) {
     if (userConfig) {
       this.userConfig = userConfig;
     }
-    const { privateKey, publicKey } = createKeyPair();
-    this.privateKey = privateKey;
-    this.publicKey = publicKey;
   }
 
   public create(userConfig?: SDJWTConfig): SDJwtInstance {
@@ -31,6 +26,7 @@ export class SDJwtInstance {
 
   public async issue<Payload extends object>(
     payload: Payload,
+    privateKey: Uint8Array | KeyLike,
     disclosureFrame?: DisclosureFrame<Payload>,
     options?: {
       sign_alg?: string;
@@ -47,7 +43,7 @@ export class SDJwtInstance {
         _sd_alg: options?.hash_alg ?? 'sha-256',
       },
     });
-    await jwt.sign(this.privateKey);
+    await jwt.sign(privateKey);
 
     const sdJwt = new SDJwt({
       jwt,
@@ -65,6 +61,7 @@ export class SDJwtInstance {
 
   public async verify(
     encodedSDJwt: string,
+    publicKey: Uint8Array | KeyLike,
     requiredClaimKeys?: string[],
     options?: any,
   ): Promise<boolean> {
@@ -72,7 +69,7 @@ export class SDJwtInstance {
     if (!sdjwt.jwt) {
       return false;
     }
-    const validated = this.validate(encodedSDJwt);
+    const validated = this.validate(encodedSDJwt, publicKey);
     if (!validated) {
       return false;
     }
@@ -88,13 +85,16 @@ export class SDJwtInstance {
     return true;
   }
 
-  public async validate(encodedSDJwt: string): Promise<boolean> {
+  public async validate(
+    encodedSDJwt: string,
+    publicKey: Uint8Array | KeyLike,
+  ): Promise<boolean> {
     const sdjwt = SDJwt.fromEncode(encodedSDJwt);
     if (!sdjwt.jwt) {
       return false;
     }
 
-    const verified = await sdjwt.jwt.verify(this.publicKey);
+    const verified = await sdjwt.jwt.verify(publicKey);
     return verified;
   }
 
