@@ -30,7 +30,18 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 20
-          registry-url: https://npm.pkg.github.com/
-      - run: npm publish
+      - name: Install pnpm
+        run: npm install -g pnpm
+      - name: Install Dependencies
+        run: pnpm install
+      - name: Run Tests(Unit)
+        run: pnpm test
+      - name: Run Tests(E2E)
+        run: pnpm test:e2e
+      - name: Build and publish to GitHub Packages
+        run: |
+          npm run build  # Replace with your build script
+          echo "//npm.pkg.github.com/:_authToken=${{ secrets.GITHUB_TOKEN }}" >> ~/.npmrc
+          npm publish --access public  # Publish to GitHub Packages
         env:
           NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
