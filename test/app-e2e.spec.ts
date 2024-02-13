@@ -4,6 +4,7 @@ import { DisclosureFrame, Signer, Verifier } from '../src/type';
 import fs from 'fs';
 import path from 'path';
 import { digest, generateSalt } from '../src/test/crypto.spec';
+import { describe, expect, test } from 'vitest';
 
 export const createSignerVerifier = () => {
   const { privateKey, publicKey } = Crypto.generateKeyPairSync('ed25519');

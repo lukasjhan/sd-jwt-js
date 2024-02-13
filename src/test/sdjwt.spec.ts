@@ -4,6 +4,7 @@ import { SDJwt, createHashMapping, listKeys, pack, unpack } from '../sdjwt';
 import Crypto from 'node:crypto';
 import { DisclosureFrame, Signer } from '../type';
 import { generateSalt, digest as hasher } from './crypto.spec';
+import { describe, test, expect } from 'vitest';
 
 const hash = { alg: 'SHA256', hasher };
 

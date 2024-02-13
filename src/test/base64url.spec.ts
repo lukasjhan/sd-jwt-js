@@ -3,6 +3,7 @@ import {
   Base64urlEncode,
   Uint8ArrayToBase64Url,
 } from '../base64url';
+import { describe, expect, test } from 'vitest';
 
 describe('Base64url', () => {
   const raw = 'abcdefghijklmnopqrstuvwxyz';

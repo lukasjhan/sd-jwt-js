@@ -1,6 +1,7 @@
 import { createDecoy } from '../decoy';
 import { Base64urlEncode } from '../base64url';
 import { digest, generateSalt } from './crypto.spec';
+import { describe, expect, test } from 'vitest';
 
 const hash = {
   hasher: digest,

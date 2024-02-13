@@ -1,4 +1,5 @@
 import Crypto from 'node:crypto';
+import { describe, expect, test } from 'vitest';
 
 export const generateSalt = (length: number): string => {
   const saltBytes = Crypto.randomBytes(length);
