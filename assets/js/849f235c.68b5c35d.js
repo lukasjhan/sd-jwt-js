@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunksdjwt=self.webpackChunksdjwt||[]).push([[5535],{9893:s=>{s.exports=JSON.parse('{"label":"facebook","permalink":"/sd-jwt-js/blog/tags/facebook","allTagsPath":"/sd-jwt-js/blog/tags","count":1,"unlisted":false}')}}]);

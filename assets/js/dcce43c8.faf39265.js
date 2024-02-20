@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunksdjwt=self.webpackChunksdjwt||[]).push([[4758],{9668:s=>{s.exports=JSON.parse('{"permalink":"/sd-jwt-js/blog/tags/facebook","page":1,"postsPerPage":10,"totalPages":1,"totalCount":1,"blogDescription":"Blog","blogTitle":"Blog"}')}}]);
