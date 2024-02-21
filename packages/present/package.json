@@ -55,5 +55,9 @@
       "esm"
     ]
   },
-  "gitHead": "ded40e4551bde7ae93083181bf26bd1b38bbfcfb"
+  "gitHead": "ded40e4551bde7ae93083181bf26bd1b38bbfcfb",
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  }
 }
