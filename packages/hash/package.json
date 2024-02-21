@@ -35,10 +35,10 @@
   },
   "license": "Apache-2.0",
   "devDependencies": {
-    "@hopae/sd-jwt-node-crypto": "2.0.3"
+    "@lukas.j.han/sd-jwt-node-crypto": "2.0.3"
   },
   "dependencies": {
-    "@hopae/sd-jwt-util": "2.0.3",
+    "@lukas.j.han/sd-jwt-util": "2.0.3",
     "@noble/hashes": "1.0.0"
   },
   "tsup": {
