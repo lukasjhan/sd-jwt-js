@@ -57,10 +57,10 @@ importers:
 
   examples/core-example:
     dependencies:
-      '@hopae/sd-jwt-core':
+      '@lukas.j.han/sd-jwt-core':
         specifier: workspace:*
         version: link:../../packages/core
-      '@hopae/sd-jwt-type':
+      '@lukas.j.han/sd-jwt-type':
         specifier: workspace:*
         version: link:../../packages/types
     devDependencies:
@@ -76,13 +76,13 @@ importers:
 
   examples/decode-example:
     dependencies:
-      '@hopae/sd-jwt-decode':
+      '@lukas.j.han/sd-jwt-decode':
         specifier: workspace:*
         version: link:../../packages/decode
-      '@hopae/sd-jwt-node-crypto':
+      '@lukas.j.han/sd-jwt-node-crypto':
         specifier: workspace:*
         version: link:../../packages/node-crypto
-      '@hopae/sd-jwt-type':
+      '@lukas.j.han/sd-jwt-type':
         specifier: workspace:*
         version: link:../../packages/types
     devDependencies:
@@ -98,16 +98,16 @@ importers:
 
   examples/present-example:
     dependencies:
-      '@hopae/sd-jwt-decode':
+      '@lukas.j.han/sd-jwt-decode':
         specifier: workspace:*
         version: link:../../packages/decode
-      '@hopae/sd-jwt-node-crypto':
+      '@lukas.j.han/sd-jwt-node-crypto':
         specifier: workspace:*
         version: link:../../packages/node-crypto
-      '@hopae/sd-jwt-present':
+      '@lukas.j.han/sd-jwt-present':
         specifier: workspace:*
         version: link:../../packages/present
-      '@hopae/sd-jwt-type':
+      '@lukas.j.han/sd-jwt-type':
         specifier: workspace:*
         version: link:../../packages/types
     devDependencies:
@@ -125,43 +125,43 @@ importers:
 
   packages/core:
     dependencies:
-      '@hopae/sd-jwt-decode':
+      '@lukas.j.han/sd-jwt-decode':
         specifier: 2.0.3
         version: link:../decode
-      '@hopae/sd-jwt-type':
+      '@lukas.j.han/sd-jwt-type':
         specifier: 2.0.3
         version: link:../types
-      '@hopae/sd-jwt-util':
+      '@lukas.j.han/sd-jwt-util':
         specifier: 2.0.3
         version: link:../utils
     devDependencies:
-      '@hopae/sd-jwt-node-crypto':
+      '@lukas.j.han/sd-jwt-node-crypto':
         specifier: 2.0.3
         version: link:../node-crypto
 
   packages/decode:
     dependencies:
-      '@hopae/sd-jwt-type':
+      '@lukas.j.han/sd-jwt-type':
         specifier: 2.0.3
         version: link:../types
-      '@hopae/sd-jwt-util':
+      '@lukas.j.han/sd-jwt-util':
         specifier: 2.0.3
         version: link:../utils
     devDependencies:
-      '@hopae/sd-jwt-node-crypto':
+      '@lukas.j.han/sd-jwt-node-crypto':
         specifier: 2.0.3
         version: link:../node-crypto
 
   packages/hash:
     dependencies:
-      '@hopae/sd-jwt-util':
+      '@lukas.j.han/sd-jwt-util':
         specifier: 2.0.3
         version: link:../utils
       '@noble/hashes':
         specifier: 1.0.0
         version: 1.0.0
     devDependencies:
-      '@hopae/sd-jwt-node-crypto':
+      '@lukas.j.han/sd-jwt-node-crypto':
         specifier: 2.0.3
         version: link:../node-crypto
 
@@ -169,17 +169,17 @@ importers:
 
   packages/present:
     dependencies:
-      '@hopae/sd-jwt-decode':
+      '@lukas.j.han/sd-jwt-decode':
         specifier: 2.0.3
         version: link:../decode
-      '@hopae/sd-jwt-type':
+      '@lukas.j.han/sd-jwt-type':
         specifier: 2.0.3
         version: link:../types
-      '@hopae/sd-jwt-util':
+      '@lukas.j.han/sd-jwt-util':
         specifier: 2.0.3
         version: link:../utils
     devDependencies:
-      '@hopae/sd-jwt-node-crypto':
+      '@lukas.j.han/sd-jwt-node-crypto':
         specifier: 2.0.3
         version: link:../node-crypto
 
@@ -191,14 +191,14 @@ importers:
 
   packages/utils:
     dependencies:
-      '@hopae/sd-jwt-type':
+      '@lukas.j.han/sd-jwt-type':
         specifier: 2.0.3
         version: link:../types
       js-base64:
         specifier: ^3.7.6
         version: 3.7.6
     devDependencies:
-      '@hopae/sd-jwt-node-crypto':
+      '@lukas.j.han/sd-jwt-node-crypto':
         specifier: 2.0.3
         version: link:../node-crypto
 
