@@ -1,5 +1,5 @@
-import { SDJwtInstance } from '@hopae/sd-jwt-core';
-import { DisclosureFrame } from '@hopae/sd-jwt-type';
+import { SDJwtInstance } from '@lukas.j.han/sd-jwt-core';
+import { DisclosureFrame } from '@lukas.j.han/sd-jwt-type';
 import { createSignerVerifier, digest, generateSalt } from './utils';
 
 (async () => {

@@ -1,6 +1,6 @@
-import { SDJWTException } from '@hopae/sd-jwt-util';
+import { SDJWTException } from '@lukas.j.han/sd-jwt-util';
 import { Jwt } from './jwt';
-import { Verifier, kbHeader, kbPayload } from '@hopae/sd-jwt-type';
+import { Verifier, kbHeader, kbPayload } from '@lukas.j.han/sd-jwt-type';
 
 export class KBJwt<
   Header extends kbHeader = kbHeader,

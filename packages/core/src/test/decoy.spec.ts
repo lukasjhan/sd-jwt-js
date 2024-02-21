@@ -1,7 +1,7 @@
 import { createDecoy } from '../decoy';
 import { describe, expect, test } from 'vitest';
-import { Base64urlEncode } from '@hopae/sd-jwt-util';
-import { digest, generateSalt } from '@hopae/sd-jwt-node-crypto';
+import { Base64urlEncode } from '@lukas.j.han/sd-jwt-util';
+import { digest, generateSalt } from '@lukas.j.han/sd-jwt-node-crypto';
 
 const hash = {
   hasher: digest,

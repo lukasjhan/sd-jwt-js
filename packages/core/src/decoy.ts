@@ -1,5 +1,5 @@
-import { HasherAndAlg, SaltGenerator } from '@hopae/sd-jwt-type';
-import { Uint8ArrayToBase64Url } from '@hopae/sd-jwt-util';
+import { HasherAndAlg, SaltGenerator } from '@lukas.j.han/sd-jwt-type';
+import { Uint8ArrayToBase64Url } from '@lukas.j.han/sd-jwt-util';
 
 // This function creates a decoy value that can be used to obscure SD JWT payload.
 // The value is basically a hash of a random salt. So the value is not predictable.

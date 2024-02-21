@@ -1,11 +1,14 @@
-import { Disclosure } from '@hopae/sd-jwt-util';
+import { Disclosure } from '@lukas.j.han/sd-jwt-util';
 import { Jwt } from '../jwt';
 import { SDJwt, listKeys, pack } from '../sdjwt';
 import Crypto from 'node:crypto';
 import { describe, test, expect } from 'vitest';
-import { DisclosureFrame, Signer } from '@hopae/sd-jwt-type';
-import { generateSalt, digest as hasher } from '@hopae/sd-jwt-node-crypto';
-import { unpack, createHashMapping } from '@hopae/sd-jwt-decode';
+import { DisclosureFrame, Signer } from '@lukas.j.han/sd-jwt-type';
+import {
+  generateSalt,
+  digest as hasher,
+} from '@lukas.j.han/sd-jwt-node-crypto';
+import { unpack, createHashMapping } from '@lukas.j.han/sd-jwt-decode';
 
 const hash = { alg: 'SHA256', hasher };
 

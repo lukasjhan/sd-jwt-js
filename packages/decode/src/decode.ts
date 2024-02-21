@@ -2,15 +2,18 @@ import {
   Base64urlDecode,
   SDJWTException,
   Disclosure,
-} from '@hopae/sd-jwt-util';
+} from '@lukas.j.han/sd-jwt-util';
 import {
   Hasher,
   HasherAndAlg,
   SD_DIGEST,
   SD_LIST_KEY,
   SD_SEPARATOR,
-} from '@hopae/sd-jwt-type';
-import { HasherAndAlgSync, HasherSync } from '@hopae/sd-jwt-type/src/type';
+} from '@lukas.j.han/sd-jwt-type';
+import {
+  HasherAndAlgSync,
+  HasherSync,
+} from '@lukas.j.han/sd-jwt-type/src/type';
 
 export const decodeJwt = <
   H extends Record<string, any>,
