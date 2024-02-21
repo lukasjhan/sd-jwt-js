@@ -6,6 +6,14 @@ export class SdJwtVcInstance extends SDJwtInstance {
    * Verify the SD JWT VC
    *
    * It validates
+   * - iss:    REQUIRED
+   * - iat:    REQUIRED
+   * - nbf:    OPTIONAL
+   * - exp:    OPTIONAL
+   * - cnf:    OPTIONAL
+   * - vct:    REQUIRED
+   * - status: OPTIONAL
+   * - sub:    OPTIONAL
    */
   public async verify(
     encodedSDJwt: string,
