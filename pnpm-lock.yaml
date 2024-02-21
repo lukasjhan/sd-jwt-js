@@ -126,43 +126,43 @@ importers:
   packages/core:
     dependencies:
       '@lukas.j.han/sd-jwt-decode':
-        specifier: 2.0.3
+        specifier: 2.1.0
         version: link:../decode
       '@lukas.j.han/sd-jwt-type':
-        specifier: 2.0.3
+        specifier: 2.1.0
         version: link:../types
       '@lukas.j.han/sd-jwt-util':
-        specifier: 2.0.3
+        specifier: 2.1.0
         version: link:../utils
     devDependencies:
       '@lukas.j.han/sd-jwt-node-crypto':
-        specifier: 2.0.3
+        specifier: 2.1.0
         version: link:../node-crypto
 
   packages/decode:
     dependencies:
       '@lukas.j.han/sd-jwt-type':
-        specifier: 2.0.3
+        specifier: 2.1.0
         version: link:../types
       '@lukas.j.han/sd-jwt-util':
-        specifier: 2.0.3
+        specifier: 2.1.0
         version: link:../utils
     devDependencies:
       '@lukas.j.han/sd-jwt-node-crypto':
-        specifier: 2.0.3
+        specifier: 2.1.0
         version: link:../node-crypto
 
   packages/hash:
     dependencies:
       '@lukas.j.han/sd-jwt-util':
-        specifier: 2.0.3
+        specifier: 2.1.0
         version: link:../utils
       '@noble/hashes':
         specifier: 1.0.0
         version: 1.0.0
     devDependencies:
       '@lukas.j.han/sd-jwt-node-crypto':
-        specifier: 2.0.3
+        specifier: 2.1.0
         version: link:../node-crypto
 
   packages/node-crypto: {}
@@ -170,17 +170,17 @@ importers:
   packages/present:
     dependencies:
       '@lukas.j.han/sd-jwt-decode':
-        specifier: 2.0.3
+        specifier: 2.1.0
         version: link:../decode
       '@lukas.j.han/sd-jwt-type':
-        specifier: 2.0.3
+        specifier: 2.1.0
         version: link:../types
       '@lukas.j.han/sd-jwt-util':
-        specifier: 2.0.3
+        specifier: 2.1.0
         version: link:../utils
     devDependencies:
       '@lukas.j.han/sd-jwt-node-crypto':
-        specifier: 2.0.3
+        specifier: 2.1.0
         version: link:../node-crypto
 
   packages/types:
@@ -192,14 +192,14 @@ importers:
   packages/utils:
     dependencies:
       '@lukas.j.han/sd-jwt-type':
-        specifier: 2.0.3
+        specifier: 2.1.0
         version: link:../types
       js-base64:
         specifier: ^3.7.6
         version: 3.7.6
     devDependencies:
       '@lukas.j.han/sd-jwt-node-crypto':
-        specifier: 2.0.3
+        specifier: 2.1.0
         version: link:../node-crypto
 
 packages:
