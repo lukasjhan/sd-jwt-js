@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.2.0](https://github.com/openwallet-foundation-labs/sd-jwt-js/compare/v0.15.1...v0.2.0) (2025-09-22)
+
+**Note:** Version bump only for package @zk-jwt/decode
+
+
+
+
+
 # [0.15.0](https://github.com/openwallet-foundation-labs/sd-jwt-js/compare/v0.14.1...v0.15.0) (2025-08-20)
 
 **Note:** Version bump only for package @sd-jwt/decode

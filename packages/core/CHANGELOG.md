@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.2.0](https://github.com/openwallet-foundation-labs/sd-jwt-js/compare/v0.15.1...v0.2.0) (2025-09-22)
+
+
+### Features
+
+* Adding validation during issuance when a schema is passed ([#308](https://github.com/openwallet-foundation-labs/sd-jwt-js/issues/308)) ([90eef6b](https://github.com/openwallet-foundation-labs/sd-jwt-js/commit/90eef6be1c0838d334ecdef083dbb609c3812357))
+* remove sd_hash in kb ([7ae2d00](https://github.com/openwallet-foundation-labs/sd-jwt-js/commit/7ae2d003e80ccad645caf0271a7f62a1ad4b9199))
+
+
+
+
+
 # [0.15.0](https://github.com/openwallet-foundation-labs/sd-jwt-js/compare/v0.14.1...v0.15.0) (2025-08-20)
 
 **Note:** Version bump only for package @sd-jwt/core
