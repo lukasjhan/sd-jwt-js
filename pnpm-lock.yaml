@@ -47,13 +47,13 @@ importers:
 
   examples/decode-example:
     dependencies:
-      '@sd-jwt/crypto-nodejs':
+      '@zk-jwt/crypto-nodejs':
         specifier: workspace:*
         version: link:../../packages/node-crypto
-      '@sd-jwt/decode':
+      '@zk-jwt/decode':
         specifier: workspace:*
         version: link:../../packages/decode
-      '@sd-jwt/types':
+      '@zk-jwt/types':
         specifier: workspace:*
         version: link:../../packages/types
     devDependencies:
@@ -69,16 +69,16 @@ importers:
 
   examples/present-example:
     dependencies:
-      '@sd-jwt/crypto-nodejs':
+      '@zk-jwt/crypto-nodejs':
         specifier: workspace:*
         version: link:../../packages/node-crypto
-      '@sd-jwt/decode':
+      '@zk-jwt/decode':
         specifier: workspace:*
         version: link:../../packages/decode
-      '@sd-jwt/present':
+      '@zk-jwt/present':
         specifier: workspace:*
         version: link:../../packages/present
-      '@sd-jwt/types':
+      '@zk-jwt/types':
         specifier: workspace:*
         version: link:../../packages/types
     devDependencies:
@@ -94,13 +94,13 @@ importers:
 
   examples/sd-jwt-example:
     dependencies:
-      '@sd-jwt/core':
+      '@zk-jwt/core':
         specifier: workspace:*
         version: link:../../packages/core
-      '@sd-jwt/crypto-nodejs':
+      '@zk-jwt/crypto-nodejs':
         specifier: workspace:*
         version: link:../../packages/node-crypto
-      '@sd-jwt/types':
+      '@zk-jwt/types':
         specifier: workspace:*
         version: link:../../packages/types
     devDependencies:
@@ -116,13 +116,13 @@ importers:
 
   examples/sd-jwt-vc-example:
     dependencies:
-      '@sd-jwt/crypto-nodejs':
+      '@zk-jwt/crypto-nodejs':
         specifier: workspace:*
         version: link:../../packages/node-crypto
-      '@sd-jwt/sd-jwt-vc':
+      '@zk-jwt/sd-jwt-vc':
         specifier: workspace:*
         version: link:../../packages/sd-jwt-vc
-      '@sd-jwt/types':
+      '@zk-jwt/types':
         specifier: workspace:*
         version: link:../../packages/types
     devDependencies:
@@ -140,33 +140,33 @@ importers:
 
   packages/core:
     dependencies:
-      '@sd-jwt/decode':
+      '@zk-jwt/decode':
         specifier: workspace:*
         version: link:../decode
-      '@sd-jwt/present':
+      '@zk-jwt/present':
         specifier: workspace:*
         version: link:../present
-      '@sd-jwt/types':
+      '@zk-jwt/types':
         specifier: workspace:*
         version: link:../types
-      '@sd-jwt/utils':
+      '@zk-jwt/utils':
         specifier: workspace:*
         version: link:../utils
     devDependencies:
-      '@sd-jwt/crypto-nodejs':
+      '@zk-jwt/crypto-nodejs':
         specifier: workspace:*
         version: link:../node-crypto
 
   packages/decode:
     dependencies:
-      '@sd-jwt/types':
+      '@zk-jwt/types':
         specifier: workspace:*
         version: link:../types
-      '@sd-jwt/utils':
+      '@zk-jwt/utils':
         specifier: workspace:*
         version: link:../utils
     devDependencies:
-      '@sd-jwt/crypto-nodejs':
+      '@zk-jwt/crypto-nodejs':
         specifier: workspace:*
         version: link:../node-crypto
 
@@ -175,17 +175,17 @@ importers:
       '@noble/hashes':
         specifier: ^1.8.0
         version: 1.8.0
-      '@sd-jwt/utils':
+      '@zk-jwt/utils':
         specifier: workspace:*
         version: link:../utils
     devDependencies:
-      '@sd-jwt/crypto-nodejs':
+      '@zk-jwt/crypto-nodejs':
         specifier: workspace:*
         version: link:../node-crypto
 
   packages/jwt-status-list:
     dependencies:
-      '@sd-jwt/types':
+      '@zk-jwt/types':
         specifier: workspace:*
         version: link:../types
       base64url:
@@ -206,29 +206,29 @@ importers:
 
   packages/present:
     dependencies:
-      '@sd-jwt/decode':
+      '@zk-jwt/decode':
         specifier: workspace:*
         version: link:../decode
-      '@sd-jwt/types':
+      '@zk-jwt/types':
         specifier: workspace:*
         version: link:../types
-      '@sd-jwt/utils':
+      '@zk-jwt/utils':
         specifier: workspace:*
         version: link:../utils
     devDependencies:
-      '@sd-jwt/crypto-nodejs':
+      '@zk-jwt/crypto-nodejs':
         specifier: workspace:*
         version: link:../node-crypto
 
   packages/sd-jwt-vc:
     dependencies:
-      '@sd-jwt/core':
+      '@zk-jwt/core':
         specifier: workspace:*
         version: link:../core
-      '@sd-jwt/jwt-status-list':
+      '@zk-jwt/jwt-status-list':
         specifier: workspace:*
         version: link:../jwt-status-list
-      '@sd-jwt/utils':
+      '@zk-jwt/utils':
         specifier: workspace:*
         version: link:../utils
       ajv:
@@ -238,10 +238,10 @@ importers:
         specifier: ^3.0.1
         version: 3.0.1(ajv@8.17.1)
     devDependencies:
-      '@sd-jwt/crypto-nodejs':
+      '@zk-jwt/crypto-nodejs':
         specifier: workspace:*
         version: link:../node-crypto
-      '@sd-jwt/types':
+      '@zk-jwt/types':
         specifier: workspace:*
         version: link:../types
       jose:
@@ -255,14 +255,14 @@ importers:
 
   packages/utils:
     dependencies:
-      '@sd-jwt/types':
+      '@zk-jwt/types':
         specifier: workspace:*
         version: link:../types
       js-base64:
         specifier: ^3.7.6
         version: 3.7.6
     devDependencies:
-      '@sd-jwt/crypto-nodejs':
+      '@zk-jwt/crypto-nodejs':
         specifier: workspace:*
         version: link:../node-crypto
 

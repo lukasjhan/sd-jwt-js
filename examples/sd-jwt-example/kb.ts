@@ -1,5 +1,5 @@
-import { SDJwtInstance } from '@sd-jwt/core';
-import type { DisclosureFrame } from '@sd-jwt/types';
+import { SDJwtInstance } from '@zk-jwt/core';
+import type { DisclosureFrame } from '@zk-jwt/types';
 import { createSignerVerifier, digest, ES256, generateSalt } from './utils';
 
 (async () => {

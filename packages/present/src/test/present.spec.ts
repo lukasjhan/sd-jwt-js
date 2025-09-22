@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest';
-import { digest } from '@sd-jwt/crypto-nodejs';
+import { digest } from '@zk-jwt/crypto-nodejs';
 import {
   type SerializedDisclosure,
   present,
@@ -9,8 +9,8 @@ import {
   selectDisclosures,
   transformPresentationFrame,
 } from '../index';
-import { decodeSdJwt, decodeSdJwtSync } from '@sd-jwt/decode';
-import type { PresentationFrame } from '@sd-jwt/types';
+import { decodeSdJwt, decodeSdJwtSync } from '@zk-jwt/decode';
+import type { PresentationFrame } from '@zk-jwt/types';
 
 describe('Present tests', () => {
   test('presentableKeys', async () => {

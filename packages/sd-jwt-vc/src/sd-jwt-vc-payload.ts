@@ -1,4 +1,4 @@
-import type { SdJwtPayload } from '@sd-jwt/core';
+import type { SdJwtPayload } from '@zk-jwt/core';
 import type { SDJWTVCStatusReference } from './sd-jwt-vc-status-reference';
 
 export interface SdJwtVcPayload extends SdJwtPayload {

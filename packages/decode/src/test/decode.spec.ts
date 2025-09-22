@@ -10,7 +10,7 @@ import {
   splitSdJwt,
   unpackObj,
 } from '../index';
-import { digest } from '@sd-jwt/crypto-nodejs';
+import { digest } from '@zk-jwt/crypto-nodejs';
 
 describe('decode tests', () => {
   test('decode jwt', () => {

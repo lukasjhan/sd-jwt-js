@@ -1,4 +1,4 @@
-import { SDJwtInstance } from '@sd-jwt/core';
+import { SDJwtInstance } from '@zk-jwt/core';
 import { createSignerVerifier, digest, ES256, generateSalt } from './utils';
 
 (async () => {

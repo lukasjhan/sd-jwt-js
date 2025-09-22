@@ -1,4 +1,4 @@
-import { digest } from '@sd-jwt/crypto-nodejs';
+import { digest } from '@zk-jwt/crypto-nodejs';
 import { bytesToHex } from '@noble/hashes/utils';
 import { hasher, sha256 } from '../index';
 import { describe, expect, test } from 'vitest';

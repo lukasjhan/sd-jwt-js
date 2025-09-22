@@ -1,6 +1,6 @@
 {
-  "name": "@sd-jwt/sd-jwt-vc",
-  "version": "0.15.1",
+  "name": "@zk-jwt/sd-jwt-vc",
+  "version": "0.1.0",
   "description": "sd-jwt draft 7 implementation in typescript",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -39,15 +39,15 @@
   },
   "license": "Apache-2.0",
   "dependencies": {
-    "@sd-jwt/core": "workspace:*",
-    "@sd-jwt/jwt-status-list": "workspace:*",
-    "@sd-jwt/utils": "workspace:*",
+    "@zk-jwt/core": "workspace:*",
+    "@zk-jwt/jwt-status-list": "workspace:*",
+    "@zk-jwt/utils": "workspace:*",
     "ajv": "^8.17.1",
     "ajv-formats": "^3.0.1"
   },
   "devDependencies": {
-    "@sd-jwt/crypto-nodejs": "workspace:*",
-    "@sd-jwt/types": "workspace:*",
+    "@zk-jwt/crypto-nodejs": "workspace:*",
+    "@zk-jwt/types": "workspace:*",
     "jose": "^5.2.2",
     "msw": "^2.3.5"
   },

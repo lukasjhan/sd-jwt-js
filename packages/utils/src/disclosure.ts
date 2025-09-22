@@ -8,7 +8,7 @@ import type {
   HasherAndAlg,
   DisclosureData,
   HasherAndAlgSync,
-} from '@sd-jwt/types';
+} from '@zk-jwt/types';
 
 export class Disclosure<T = unknown> {
   public salt: string;

@@ -1,5 +1,5 @@
-import type { HasherAndAlg, SaltGenerator } from '@sd-jwt/types';
-import { uint8ArrayToBase64Url } from '@sd-jwt/utils';
+import type { HasherAndAlg, SaltGenerator } from '@zk-jwt/types';
+import { uint8ArrayToBase64Url } from '@zk-jwt/utils';
 
 // This function creates a decoy value that can be used to obscure SD JWT payload.
 // The value is basically a hash of a random salt. So the value is not predictable.

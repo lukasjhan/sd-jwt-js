@@ -3,7 +3,7 @@ import {
   sha384 as nobleSha384,
   sha512 as nobleSha512,
 } from '@noble/hashes/sha2.js';
-import { SDJWTException } from '@sd-jwt/utils';
+import { SDJWTException } from '@zk-jwt/utils';
 
 export const sha256 = (text: string | ArrayBuffer): Uint8Array => {
   const uint8Array =
@@ -51,9 +51,7 @@ export const hasher = (
 
 const toCryptoAlg = (hashAlg: HasherAlgorithm): string =>
   // To cover sha-256, sha256, SHA-256, SHA256
-  hashAlg
-    .replace('-', '')
-    .toLowerCase();
+  hashAlg.replace('-', '').toLowerCase();
 
 function toUTF8Array(str: string) {
   const utf8: Array<number> = [];

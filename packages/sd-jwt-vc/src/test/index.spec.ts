@@ -1,10 +1,10 @@
-import { digest, generateSalt } from '@sd-jwt/crypto-nodejs';
+import { digest, generateSalt } from '@zk-jwt/crypto-nodejs';
 import type {
   DisclosureFrame,
   Signer,
   Verifier,
   JwtPayload,
-} from '@sd-jwt/types';
+} from '@zk-jwt/types';
 import { describe, test, expect } from 'vitest';
 import { SDJwtVcInstance } from '..';
 import type { SdJwtVcPayload } from '../sd-jwt-vc-payload';
@@ -13,7 +13,7 @@ import {
   StatusList,
   type StatusListJWTHeaderParameters,
   createHeaderAndPayload,
-} from '@sd-jwt/jwt-status-list';
+} from '@zk-jwt/jwt-status-list';
 import { SignJWT } from 'jose';
 
 const iss = 'ExampleIssuer';

@@ -1,5 +1,5 @@
-import { FlattenJSON, SDJwtInstance } from '@sd-jwt/core';
-import type { DisclosureFrame } from '@sd-jwt/types';
+import { FlattenJSON, SDJwtInstance } from '@zk-jwt/core';
+import type { DisclosureFrame } from '@zk-jwt/types';
 import { createSignerVerifier, digest, generateSalt, ES256 } from './utils';
 
 (async () => {

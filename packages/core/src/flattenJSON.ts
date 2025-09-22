@@ -1,6 +1,6 @@
-import { SDJWTException } from '@sd-jwt/utils';
-import { splitSdJwt } from '@sd-jwt/decode';
-import { SD_SEPARATOR } from '@sd-jwt/types';
+import { SDJWTException } from '@zk-jwt/utils';
+import { splitSdJwt } from '@zk-jwt/decode';
+import { SD_SEPARATOR } from '@zk-jwt/types';
 
 export type FlattenJSONData = {
   jwtData: {

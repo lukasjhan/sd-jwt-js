@@ -1,5 +1,5 @@
 import { createDecoy } from './decoy';
-import { SDJWTException, Disclosure } from '@sd-jwt/utils';
+import { SDJWTException, Disclosure } from '@zk-jwt/utils';
 import { Jwt } from './jwt';
 import { KBJwt } from './kbjwt';
 import {
@@ -15,9 +15,9 @@ import {
   type SaltGenerator,
   type kbHeader,
   type kbPayload,
-} from '@sd-jwt/types';
-import { createHashMapping, getSDAlgAndPayload, unpack } from '@sd-jwt/decode';
-import { transformPresentationFrame } from '@sd-jwt/present';
+} from '@zk-jwt/types';
+import { createHashMapping, getSDAlgAndPayload, unpack } from '@zk-jwt/decode';
+import { transformPresentationFrame } from '@zk-jwt/present';
 
 export type SDJwtData<
   Header extends Record<string, unknown>,

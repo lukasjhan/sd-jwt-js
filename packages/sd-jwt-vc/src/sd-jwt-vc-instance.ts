@@ -1,6 +1,6 @@
-import { Jwt, SDJwt, SDJwtInstance, type VerifierOptions } from '@sd-jwt/core';
-import type { DisclosureFrame, Hasher, Verifier } from '@sd-jwt/types';
-import { base64urlDecode, SDJWTException } from '@sd-jwt/utils';
+import { Jwt, SDJwt, SDJwtInstance, type VerifierOptions } from '@zk-jwt/core';
+import type { DisclosureFrame, Hasher, Verifier } from '@zk-jwt/types';
+import { base64urlDecode, SDJWTException } from '@zk-jwt/utils';
 import type { SdJwtVcPayload } from './sd-jwt-vc-payload';
 import type {
   SDJWTVCConfig,
@@ -11,7 +11,7 @@ import {
   type StatusListJWTPayload,
   getListFromStatusListJWT,
   type StatusListJWTHeaderParameters,
-} from '@sd-jwt/jwt-status-list';
+} from '@zk-jwt/jwt-status-list';
 import type { TypeMetadataFormat } from './sd-jwt-vc-type-metadata-format';
 import Ajv, { type SchemaObject } from 'ajv';
 import type { VerificationResult } from './verification-result';

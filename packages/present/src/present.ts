@@ -2,8 +2,8 @@ import {
   type Hasher,
   type PresentationFrame,
   SD_SEPARATOR,
-} from '@sd-jwt/types';
-import { Disclosure, SDJWTException } from '@sd-jwt/utils';
+} from '@zk-jwt/types';
+import { Disclosure, SDJWTException } from '@zk-jwt/utils';
 import {
   createHashMapping,
   decodeSdJwt,
@@ -14,8 +14,8 @@ import {
   decodeSdJwtSync,
   unpackSync,
   unpackObj,
-} from '@sd-jwt/decode';
-import type { Extensible, HasherSync } from '@sd-jwt/types/src/type';
+} from '@zk-jwt/decode';
+import type { Extensible, HasherSync } from '@zk-jwt/types/src/type';
 
 // Presentable keys
 // The presentable keys are the path of JSON object that are presentable in the SD JWT

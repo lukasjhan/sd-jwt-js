@@ -1,8 +1,8 @@
 import { SDJwtInstance, type SdJwtPayload } from '../index';
-import type { Signer, Verifier, KbVerifier, JwtPayload } from '@sd-jwt/types';
+import type { Signer, Verifier, KbVerifier, JwtPayload } from '@zk-jwt/types';
 import Crypto, { type KeyLike } from 'node:crypto';
 import { describe, expect, test } from 'vitest';
-import { digest, generateSalt, ES256 } from '@sd-jwt/crypto-nodejs';
+import { digest, generateSalt, ES256 } from '@zk-jwt/crypto-nodejs';
 import { importJWK, exportJWK, type JWK } from 'jose';
 
 // Extract the major version as a number

@@ -1,4 +1,4 @@
-import type { JwtPayload } from '@sd-jwt/types';
+import type { JwtPayload } from '@zk-jwt/types';
 import { StatusList } from './status-list';
 import type {
   JWTwithStatusListPayload,

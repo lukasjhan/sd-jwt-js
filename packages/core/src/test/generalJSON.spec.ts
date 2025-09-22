@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest';
 import { GeneralJSON } from '..';
-import type { Signer, Verifier } from '@sd-jwt/types';
+import type { Signer, Verifier } from '@zk-jwt/types';
 import Crypto from 'node:crypto';
 
 const createSignerVerifier = () => {

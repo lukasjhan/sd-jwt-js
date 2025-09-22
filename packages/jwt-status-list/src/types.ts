@@ -1,4 +1,4 @@
-import type { JwtPayload } from '@sd-jwt/types';
+import type { JwtPayload } from '@zk-jwt/types';
 
 /**
  * Reference to a status list entry.

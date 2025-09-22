@@ -3,7 +3,7 @@ import {
   base64urlEncode,
   SDJWTException,
   uint8ArrayToBase64Url,
-} from '@sd-jwt/utils';
+} from '@zk-jwt/utils';
 import { Jwt, type VerifierOptions } from './jwt';
 import { KBJwt } from './kbjwt';
 import { SDJwt, pack } from './sdjwt';
@@ -18,8 +18,8 @@ import {
   type JwtPayload,
   type Signer,
   IANA_HASH_ALGORITHMS,
-} from '@sd-jwt/types';
-import { getSDAlgAndPayload } from '@sd-jwt/decode';
+} from '@zk-jwt/types';
+import { getSDAlgAndPayload } from '@zk-jwt/decode';
 import { FlattenJSON } from './flattenJSON';
 import { GeneralJSON } from './generalJSON';
 

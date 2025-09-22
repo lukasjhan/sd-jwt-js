@@ -11,7 +11,7 @@ import { StatusList } from '../status-list';
 import { jwtVerify, type KeyLike, SignJWT } from 'jose';
 import { beforeAll, describe, expect, it } from 'vitest';
 import { generateKeyPairSync } from 'node:crypto';
-import type { JwtPayload } from '@sd-jwt/types';
+import type { JwtPayload } from '@zk-jwt/types';
 
 describe('JWTStatusList', () => {
   let publicKey: KeyLike;

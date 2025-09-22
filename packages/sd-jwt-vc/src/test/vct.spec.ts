@@ -1,5 +1,5 @@
-import { digest, generateSalt } from '@sd-jwt/crypto-nodejs';
-import type { DisclosureFrame, Signer, Verifier } from '@sd-jwt/types';
+import { digest, generateSalt } from '@zk-jwt/crypto-nodejs';
+import type { DisclosureFrame, Signer, Verifier } from '@zk-jwt/types';
 import { describe, test, beforeAll, afterAll, expect } from 'vitest';
 import { SDJwtVcInstance } from '..';
 import type { SdJwtVcPayload } from '../sd-jwt-vc-payload';

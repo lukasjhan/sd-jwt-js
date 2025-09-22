@@ -5,11 +5,11 @@ import type {
   PresentationFrame,
   Signer,
   Verifier,
-} from '@sd-jwt/types';
+} from '@zk-jwt/types';
 import fs from 'node:fs';
 import path from 'node:path';
 import { describe, expect, test } from 'vitest';
-import { digest, generateSalt } from '@sd-jwt/crypto-nodejs';
+import { digest, generateSalt } from '@zk-jwt/crypto-nodejs';
 
 const createSignerVerifier = () => {
   const { privateKey, publicKey } = Crypto.generateKeyPairSync('ed25519');

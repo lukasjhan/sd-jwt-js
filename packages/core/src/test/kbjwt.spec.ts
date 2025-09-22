@@ -1,4 +1,4 @@
-import type { SDJWTException } from '@sd-jwt/utils';
+import type { SDJWTException } from '@zk-jwt/utils';
 import { KBJwt } from '../kbjwt';
 import {
   type JwtPayload,
@@ -6,7 +6,7 @@ import {
   type KbVerifier,
   type Signer,
   Verifier,
-} from '@sd-jwt/types';
+} from '@zk-jwt/types';
 import Crypto, { type KeyLike } from 'node:crypto';
 import { describe, expect, test } from 'vitest';
 import { type JWK, exportJWK, importJWK } from 'jose';

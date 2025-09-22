@@ -1,4 +1,4 @@
-import { generateSalt, digest as hasher } from '@sd-jwt/crypto-nodejs';
+import { generateSalt, digest as hasher } from '@zk-jwt/crypto-nodejs';
 import { Disclosure } from '../disclosure';
 import { describe, expect, test } from 'vitest';
 import { base64urlEncode, type SDJWTException } from '../index';

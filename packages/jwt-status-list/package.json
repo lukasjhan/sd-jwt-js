@@ -1,6 +1,6 @@
 {
-  "name": "@sd-jwt/jwt-status-list",
-  "version": "0.15.0",
+  "name": "@zk-jwt/jwt-status-list",
+  "version": "0.1.0",
   "description": "Implementation based on https://datatracker.ietf.org/doc/draft-ietf-oauth-status-list/",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
@@ -42,7 +42,7 @@
     "jose": "^5.2.2"
   },
   "dependencies": {
-    "@sd-jwt/types": "workspace:*",
+    "@zk-jwt/types": "workspace:*",
     "base64url": "^3.0.1",
     "pako": "^2.1.0"
   },
