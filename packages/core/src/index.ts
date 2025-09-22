@@ -54,10 +54,7 @@ export class SDJwtInstance<ExtendedPayload extends SdJwtPayload> {
     }
   }
 
-  private async createKBJwt(
-    options: KBOptions,
-    sdHash: string,
-  ): Promise<KBJwt> {
+  private async createKBJwt(options: KBOptions): Promise<KBJwt> {
     if (!this.userConfig.kbSigner) {
       throw new SDJWTException('Key Binding Signer not found');
     }
@@ -71,7 +68,7 @@ export class SDJwtInstance<ExtendedPayload extends SdJwtPayload> {
         typ: KB_JWT_TYP,
         alg: this.userConfig.kbSignAlg,
       },
-      payload: { ...payload, sd_hash: sdHash },
+      payload,
     });
 
     await kbJwt.sign(this.userConfig.kbSigner);
@@ -183,13 +180,7 @@ export class SDJwtInstance<ExtendedPayload extends SdJwtPayload> {
       return presentSdJwtWithoutKb;
     }
 
-    const sdHashStr = await this.calculateSDHash(
-      presentSdJwtWithoutKb,
-      sdjwt,
-      hasher,
-    );
-
-    sdjwt.kbJwt = await this.createKBJwt(options.kb, sdHashStr);
+    sdjwt.kbJwt = await this.createKBJwt(options.kb);
     return sdjwt.present(presentationFrame, hasher);
   }
 
@@ -237,23 +228,6 @@ export class SDJwtInstance<ExtendedPayload extends SdJwtPayload> {
     });
     if (!kb) {
       throw new Error('signature is not valid');
-    }
-
-    const sdHashfromKb = kb.payload.sd_hash;
-    const sdjwtWithoutKb = new SDJwt({
-      jwt: sdjwt.jwt,
-      disclosures: sdjwt.disclosures,
-    });
-
-    const presentSdJwtWithoutKb = sdjwtWithoutKb.encodeSDJwt();
-    const sdHashStr = await this.calculateSDHash(
-      presentSdJwtWithoutKb,
-      sdjwt,
-      hasher,
-    );
-
-    if (sdHashStr !== sdHashfromKb) {
-      throw new SDJWTException('Invalid sd_hash in Key Binding JWT');
     }
 
     return { payload, header, kb };
@@ -366,10 +340,7 @@ export class SDJwtGeneralJSONInstance<ExtendedPayload extends SdJwtPayload> {
     }
   }
 
-  private async createKBJwt(
-    options: KBOptions,
-    sdHash: string,
-  ): Promise<KBJwt> {
+  private async createKBJwt(options: KBOptions): Promise<KBJwt> {
     if (!this.userConfig.kbSigner) {
       throw new SDJWTException('Key Binding Signer not found');
     }
@@ -383,7 +354,7 @@ export class SDJwtGeneralJSONInstance<ExtendedPayload extends SdJwtPayload> {
         typ: KB_JWT_TYP,
         alg: this.userConfig.kbSignAlg,
       },
-      payload: { ...payload, sd_hash: sdHash },
+      payload,
     });
 
     await kbJwt.sign(this.userConfig.kbSigner);
@@ -501,18 +472,7 @@ export class SDJwtGeneralJSONInstance<ExtendedPayload extends SdJwtPayload> {
       return presentedGeneralJSON;
     }
 
-    const presentSdJwtWithoutKb = await sdjwt.present(
-      presentationFrame,
-      hasher,
-    );
-
-    const sdHashStr = await this.calculateSDHash(
-      presentSdJwtWithoutKb,
-      sdjwt,
-      hasher,
-    );
-
-    const kbJwt = await this.createKBJwt(options.kb, sdHashStr);
+    const kbJwt = await this.createKBJwt(options.kb);
     const encodedKbJwt = kbJwt.encodeJwt();
     presentedGeneralJSON.kb_jwt = encodedKbJwt;
     return presentedGeneralJSON;
@@ -565,23 +525,6 @@ export class SDJwtGeneralJSONInstance<ExtendedPayload extends SdJwtPayload> {
     if (!kb) {
       throw new Error('signature is not valid');
     }
-    const sdHashfromKb = kb.payload.sd_hash;
-    const sdjwtWithoutKb = new SDJwt({
-      jwt: sdjwt.jwt,
-      disclosures: sdjwt.disclosures,
-    });
-
-    const presentSdJwtWithoutKb = sdjwtWithoutKb.encodeSDJwt();
-    const sdHashStr = await this.calculateSDHash(
-      presentSdJwtWithoutKb,
-      sdjwt,
-      hasher,
-    );
-
-    if (sdHashStr !== sdHashfromKb) {
-      throw new SDJWTException('Invalid sd_hash in Key Binding JWT');
-    }
-
     return { payload, headers, kb };
   }
 

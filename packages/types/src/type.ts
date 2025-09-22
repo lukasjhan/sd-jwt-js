@@ -50,11 +50,10 @@ export type kbPayload = {
   iat: number;
   aud: string;
   nonce: string;
-  sd_hash: string;
 };
 
 export type KBOptions = {
-  payload: Omit<kbPayload, 'sd_hash'>;
+  payload: kbPayload;
 };
 
 // This type declaration is from lib.dom.ts

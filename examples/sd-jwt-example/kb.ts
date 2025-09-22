@@ -40,7 +40,7 @@ import { createSignerVerifier, digest, ES256, generateSalt } from './utils';
 
   const presentedSdJwt = await sdjwt.present<typeof claims>(
     encodedSdjwt,
-    { id: true },
+    { id: true, ssn: true },
     {
       kb: {
         payload: kbPayload,

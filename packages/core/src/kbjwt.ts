@@ -30,12 +30,7 @@ export class KBJwt<
       this.header.typ !== KB_JWT_TYP ||
       !this.payload.iat ||
       !this.payload.aud ||
-      !this.payload.nonce ||
-      // this is for backward compatibility with version 06
-      !(
-        this.payload.sd_hash ||
-        (this.payload as Record<string, unknown> | undefined)?._sd_hash
-      )
+      !this.payload.nonce
     ) {
       throw new SDJWTException('Invalid Key Binding Jwt');
     }
